@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Writings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #222;
+            line-height: 1.6;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+        }
+
+        .entry {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .entry:hover {
+            border-color: #ccc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .entry-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+        .entry-date {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .entry-desc {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 16px;
+        }
+
+        .entry a {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .entry a:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 30px 16px;
+            }
+            .entry {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Writings</h1>
+        <p class="subtitle">Experiences, thoughts, and random stuff.</p>
+
+        <div id="entries"></div>
+    </div>
+
+    <script>
+        // ============================================
+        // JUST ADD NEW ENTRIES HERE WHEN YOU UPLOAD A PDF
+        // ============================================
+        const writings = [
+            {
+                title: "My First Experience",
+                date: "2026-06-16",
+                description: "Something I wanted to share about what happened recently.",
+                pdfUrl: "./pdfs/my-first-experience.pdf"
+            },
+            {
+                title: "Another Story",
+                date: "2026-06-10",
+                description: "Thoughts on something else I experienced.",
+                pdfUrl: "./pdfs/another-story.pdf"
+            }
+            // <-- Add new entries above this line
+        ];
+        // ============================================
+
+        const container = document.getElementById('entries');
+
+        if (writings.length === 0) {
+            container.innerHTML = '<div class="empty">No writings yet. Upload a PDF and add it above!</div>';
+        } else {
+            writings.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'entry';
+                div.innerHTML = `
+                    <div class="entry-title">${item.title}</div>
+                    <div class="entry-date">${item.date}</div>
+                    <div class="entry-desc">${item.description}</div>
+                    <a href="${item.pdfUrl}" target="_blank" rel="noopener">Open PDF →</a>
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
