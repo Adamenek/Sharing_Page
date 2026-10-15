@@ -259,60 +259,78 @@
 
     <script>
         const boincCfg = {
-            boincId: 1065477,
+            boincId: 336577,
             flopsPerCredit: 4.32e11,
-            fallbackCredit: 0,
-            fallbackRac: 0
+            refreshMs: 15 * 60 * 1000
         };
 
-        function readField(text, name) {
-            const m = text.match(new RegExp(name + '"?\\s*[:>]\\s*"?([\\d.]+)'));
-            return m ? parseFloat(m[1]) : null;
+        function findNumber(source, names) {
+            for (const name of names) {
+                const patterns = [
+                    new RegExp('(?:<[^>]+\\bid=["\\']' + name + '["\\'][^>]*>\\s*)([\\d,.]+)', 'i'),
+                    new RegExp('["\\']?' + name + '["\\']?\\s*[:=]\\s*["\\']?([\\d,.]+)', 'i'),
+                    new RegExp('\\b' + name + '\\b\\s*[:>]\\s*([\\d,.]+)', 'i')
+                ];
+                for (const pattern of patterns) {
+                    const match = source.match(pattern);
+                    if (match) {
+                        const value = Number(match[1].replace(/,/g, ''));
+                        if (Number.isFinite(value)) return value;
+                    }
+                }
+            }
+            return null;
         }
 
-        function renderBoinc(credit, rac, offline) {
+        function renderBoinc(credit, rac, sourceName) {
             const flops = credit * boincCfg.flopsPerCredit / 1e18;
             document.getElementById('boinc-flops').textContent = flops.toFixed(flops < 0.01 ? 4 : 2);
             document.getElementById('boinc-credit').textContent = Math.round(credit).toLocaleString('en-US');
             document.getElementById('boinc-rac').textContent = Math.round(rac).toLocaleString('en-US');
 
             const dot = document.getElementById('boinc-dot');
-            const txt = document.getElementById('boinc-status-text');
-            if (rac > 0) {
-                dot.classList.add('on');
-                txt.textContent = 'running';
-            } else {
-                txt.textContent = offline ? 'offline' : 'idle';
-            }
+            const status = document.getElementById('boinc-status-text');
+            dot.classList.toggle('on', rac > 0);
+            status.textContent = rac > 0 ? 'active credit' : 'no recent credit';
+            document.getElementById('boinc-note').textContent =
+                'Updated ' + new Date().toLocaleTimeString() + ' · Source: ' + sourceName;
+        }
 
-            document.getElementById('boinc-note').textContent = offline
-                ? 'Live data unavailable, showing fallback values.'
-                : 'Status inferred from recent average credit.';
+        async function fetchText(url) {
+            const response = await fetch(url, { cache: 'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return await response.text();
         }
 
         async function loadBoinc() {
-            const api = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
+            const profileUrl = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
             const sources = [
-                api,
-                'https://api.allorigins.win/raw?url=' + encodeURIComponent(api)
+                { name: 'Einstein@Home', url: profileUrl },
+                { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(profileUrl) },
+                { name: 'CodeTabs', url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(profileUrl) }
             ];
-            for (const url of sources) {
+
+            document.getElementById('boinc-status-text').textContent = 'updating…';
+            for (const source of sources) {
                 try {
-                    const res = await fetch(url);
-                    if (!res.ok) continue;
-                    const text = await res.text();
-                    const credit = readField(text, 'total_credit');
-                    const rac = readField(text, 'expavg_credit');
-                    if (credit !== null) {
-                        renderBoinc(credit, rac !== null ? rac : 0, false);
+                    const body = await fetchText(source.url);
+                    const credit = findNumber(body, ['total_credit', 'totalCredit']);
+                    const rac = findNumber(body, ['expavg_credit', 'recent_average_credit', 'expAvgCredit']);
+                    if (credit !== null && rac !== null) {
+                        renderBoinc(credit, rac, source.name);
                         return;
                     }
-                } catch (e) {}
+                } catch (error) {
+                }
             }
-            renderBoinc(boincCfg.fallbackCredit, boincCfg.fallbackRac, true);
+
+            document.getElementById('boinc-status-text').textContent = 'unavailable';
+            document.getElementById('boinc-note').textContent =
+                'Could not retrieve live stats. The data source or browser may be blocking the request.';
         }
 
         loadBoinc();
+        setInterval(loadBoinc, boincCfg.refreshMs);
     </script>
 
     <script>
@@ -372,6 +390,9 @@
                 container.appendChild(div);
             });
         }
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
