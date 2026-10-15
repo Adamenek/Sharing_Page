@@ -290,28 +290,40 @@
                 : 'Status inferred from recent average credit.';
         }
 
-        async function loadBoinc() {
-            const api = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
-            const sources = [
-                api,
-                'https://api.allorigins.win/raw?url=' + encodeURIComponent(api)
-            ];
-            for (const url of sources) {
-                try {
-                    const res = await fetch(url);
-                    if (!res.ok) continue;
-                    const text = await res.text();
-                    const credit = readField(text, 'total_credit');
-                    const rac = readField(text, 'expavg_credit');
-                    if (credit !== null) {
-                        renderBoinc(credit, rac !== null ? rac : 0, false);
-                        return;
-                    }
-                } catch (e) {}
-            }
-            renderBoinc(boincCfg.fallbackCredit, boincCfg.fallbackRac, true);
+
+async function loadBoinc() {
+    const api = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
+    const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent(api);
+    const note = document.getElementById('boinc-note');
+
+    try {
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error('Proxy returned HTTP ' + res.status);
         }
 
+        const data = await res.json();
+        const page = data.contents;
+
+        if (typeof page !== 'string' || !page.length) {
+            throw new Error('No Einstein@Home data returned');
+        }
+
+        const credit = readField(page, 'total_credit');
+        const rac = readField(page, 'expavg_credit');
+
+        if (credit === null) {
+            throw new Error('Could not find total_credit in the response');
+        }
+
+        renderBoinc(credit, rac ?? 0, false);
+        note.textContent = 'Statistics loaded successfully.';
+    } catch (e) {
+        console.error('Einstein@Home statistics error:', e);
+        note.textContent = 'Statistics unavailable: ' + e.message;
+    }
+}
         loadBoinc();
     </script>
 
