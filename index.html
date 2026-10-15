@@ -761,7 +761,7 @@
 
                 const explanation = document.createElement("p");
                 explanation.className = "nasa-explanation";
-                explanation.textContent = data.explanation || "No description is available for this entry.";
+                description.innerHTML = data.explanation; || "No description is available for this entry.";
                 container.appendChild(explanation);
             } catch {
                 container.textContent = "NASA picture is not available yet.";
