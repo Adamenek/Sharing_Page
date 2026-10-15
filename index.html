@@ -403,29 +403,23 @@
             <p class="subtitle">Adam</p>
         </header>
 
-        <section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
-            <div class="project-heading">
-                <div class="project-title">
-                    <p class="eyebrow">Volunteer computing</p>
-                    <h2 id="einstein-title">Einstein@Home</h2>
-                    <span class="badge">BOINC</span>
-                </div>
-            </div>
-
-            <a class="boinc-signature-link"
-               href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
-               target="_blank" rel="noopener noreferrer"
-               aria-label="Open BOINCstats Switzerland user statistics">
-                <img src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
-                     alt="BOINCstats project statistics signature">
-                <span class="boinc-signature-caption">View this profile on BOINCstats ↗</span>
-            </a>
-
+       ```html
+<section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
+    <div class="project-heading">
+        <div class="project-title">
+            <p class="eyebrow">Volunteer computing</p>
+            <h2 id="einstein-title">Einstein@Home</h2>
+            <span class="badge">BOINC</span>
+        </div>
+    </div>
+    <div class="stats-signature-layout">
+        <div class="stats-column">
             <div class="boinc-stats" aria-live="polite">
                 <div class="stat">
                     <div class="stat-label">Total credit</div>
                     <div class="stat-value" id="total-credit">—</div>
                 </div>
+
                 <div class="stat">
                     <div class="stat-label">Recent average credit</div>
                     <div class="stat-value" id="recent-credit">—</div>
@@ -433,22 +427,50 @@
             </div>
 
             <div class="flops-stat">
-                <div class="flops-label">Estimated total floating-point operations</div>
+                <div class="flops-label">
+                    Estimated total floating-point operations
+                </div>
                 <div class="flops-value" id="total-flops">—</div>
-                <div class="flops-note">Whole-number estimate based on BOINC credit</div>
+                <div class="flops-note">
+                    Whole-number estimate based on BOINC credit
+                </div>
             </div>
+        </div>
 
-            <div class="widget-footer">
-                <div class="boinc-status" role="status" aria-live="polite">
-                    <span class="dot" id="status-dot"></span>
-                    <span id="status-text">Loading public statistics…</span>
-                </div>
-                <div class="profile-links">
-                    <a href="https://einsteinathome.org/de/userw.php?id=1065477" rel="noopener noreferrer">Einstein@Home profile ↗</a>
-                    <a href="https://www.boincstats.com" rel="noopener noreferrer">BOINCstats ↗</a>
-                </div>
-            </div>
-        </section>
+        <a class="boinc-signature-link"
+           href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Open BOINCstats user statistics">
+
+            <img
+                src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
+                alt="BOINCstats project statistics signature">
+
+            <span class="boinc-signature-caption">
+                View on BOINCstats ↗
+            </span>
+        </a>
+    </div>
+
+    <div class="widget-footer">
+        <div class="boinc-status" role="status" aria-live="polite">
+            <span class="dot" id="status-dot"></span>
+            <span id="status-text">Loading public statistics…</span>
+        </div>
+
+        <div class="profile-links">
+            <a href="https://einsteinathome.org/de/userw.php?id=1065477"
+               rel="noopener noreferrer">
+                Einstein@Home profile ↗
+            </a>
+            <a href="https://www.boincstats.com"
+               rel="noopener noreferrer">
+                BOINCstats ↗
+            </a>
+        </div>
+    </div>
+</section>
 
         <section id="entries" aria-label="Shared projects and files"></section>
     </main>
