@@ -219,106 +219,16 @@
                 <div class="entry-title">Einstein@Home</div>
                 <span class="badge boinc">BOINC</span>
             </div>
-            <div class="boinc-stats">
-                <div>
-                    <div class="boinc-value" id="boinc-flops">&mdash;</div>
-                    <div class="boinc-label">FLOPs (quintillion)</div>
-                </div>
-                <div>
-                    <div class="boinc-value" id="boinc-credit">&mdash;</div>
-                    <div class="boinc-label">Cobblestones</div>
-                </div>
-                <div>
-                    <div class="boinc-value" id="boinc-rac">&mdash;</div>
-                    <div class="boinc-label">Recent Avg Credit</div>
-                </div>
-                <div>
-                    <div class="boinc-status">
-                        <span class="dot" id="boinc-dot"></span>
-                        <span id="boinc-status-text">&hellip;</span>
-                    </div>
-                    <div class="boinc-label">BOINC status</div>
-                </div>
-            </div>
-            <div class="entry-links" style="margin-top: 16px;">
-                <a href="https://einsteinathome.org/de/account/336577" target="_blank" rel="noopener">View my profile &rarr;</a>
-            </div>
-            <div class="boinc-note" id="boinc-note"></div>
+            <a href="https://einsteinathome.org/de/account/336577" target="_blank" rel="noopener noreferrer">
+                <img src="https://boincstats.com" alt="Adam's BOINC Stats Banner" style="display:block;max-width:100%;height:auto;">
+            </a>
         </div>
 
         <div id="entries"></div>
         </div>
     </div>
 
-    <script>
-        const boincCfg = {
-            boincId: 1065477,
-            flopsPerCredit: 4.32e11,
-            fallbackCredit: 0,
-            fallbackRac: 0
-        };
 
-        function readField(text, name) {
-            const m = text.match(new RegExp(name + '"?\\s*[:>]\\s*"?([\\d.]+)'));
-            return m ? parseFloat(m[1]) : null;
-        }
-
-        function renderBoinc(credit, rac, offline) {
-            const flops = credit * boincCfg.flopsPerCredit / 1e18;
-            document.getElementById('boinc-flops').textContent = flops.toFixed(flops < 0.01 ? 4 : 2);
-            document.getElementById('boinc-credit').textContent = Math.round(credit).toLocaleString('en-US');
-            document.getElementById('boinc-rac').textContent = Math.round(rac).toLocaleString('en-US');
-
-            const dot = document.getElementById('boinc-dot');
-            const txt = document.getElementById('boinc-status-text');
-            if (rac > 0) {
-                dot.classList.add('on');
-                txt.textContent = 'running';
-            } else {
-                txt.textContent = offline ? 'offline' : 'idle';
-            }
-
-            document.getElementById('boinc-note').textContent = offline
-                ? 'Live data unavailable, showing fallback values.'
-                : 'Status inferred from recent average credit.';
-        }
-
-
-async function loadBoinc() {
-    const api = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
-    const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent(api);
-    const note = document.getElementById('boinc-note');
-
-    try {
-        const res = await fetch(url);
-
-        if (!res.ok) {
-            throw new Error('Proxy returned HTTP ' + res.status);
-        }
-
-        const data = await res.json();
-        const page = data.contents;
-
-        if (typeof page !== 'string' || !page.length) {
-            throw new Error('No Einstein@Home data returned');
-        }
-
-        const credit = readField(page, 'total_credit');
-        const rac = readField(page, 'expavg_credit');
-
-        if (credit === null) {
-            throw new Error('Could not find total_credit in the response');
-        }
-
-        renderBoinc(credit, rac ?? 0, false);
-        note.textContent = 'Statistics loaded successfully.';
-    } catch (e) {
-        console.error('Einstein@Home statistics error:', e);
-        note.textContent = 'Statistics unavailable: ' + e.message;
-    }
-}
-        loadBoinc();
-    </script>
 
     <script>
         // add entries above the marked line
