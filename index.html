@@ -234,30 +234,6 @@
             margin-top: 18px;
         }
 
-        .boinc-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #777;
-            font-size: 0.78rem;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            flex: 0 0 auto;
-            border-radius: 50%;
-            background: #bbb;
-        }
-
-        .dot.on {
-            background: #27ae60;
-        }
-
-        .dot.error {
-            background: #c76b4f;
-        }
-
         .profile-links {
             display: flex;
             flex-wrap: wrap;
@@ -467,7 +443,6 @@
     <script>
         "use strict";
 
-        // Keep shared items in this list so new projects and files are easy to add.
         const entries = [
             {
                 title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
@@ -506,8 +481,6 @@
             totalCredit: document.getElementById("total-credit"),
             recentCredit: document.getElementById("recent-credit"),
             totalFlops: document.getElementById("total-flops"),
-            statusDot: document.getElementById("status-dot"),
-            statusText: document.getElementById("status-text"),
             lastUpdated: document.getElementById("last-updated"),
             statsCard: document.querySelector(".einstein-card")
         };
@@ -587,16 +560,14 @@
             }
         }
 
-        
-function estimateOperations(totalCredit) {
-    const credit = Number(totalCredit);
-    if (!Number.isFinite(credit) || credit < 0) return null;
-    // 13,931,940 cobblestones ≈ 12.04 quintillion operations.
-    const operationsPerCredit = 12.04e18 / 13931940;
+        function estimateOperations(totalCredit) {
+            const credit = Number(totalCredit);
+            if (!Number.isFinite(credit) || credit < 0) return null;
 
-    return BigInt(Math.round(credit * operationsPerCredit));
-}
-
+            // Approximation calibrated to the rounded Einstein@Home certificate figure.
+            const operationsPerCredit = 12.04e18 / 13931940;
+            return BigInt(Math.round(credit * operationsPerCredit));
+        }
 
         function formatTimestamp(value) {
             if (!value) return "Last updated: unavailable";
@@ -609,12 +580,6 @@ function estimateOperations(totalCredit) {
                 timeStyle: "short",
                 timeZoneName: "short"
             }).format(date);
-        }
-
-        function setStatus(message, state = "") {
-            elements.statusText.textContent = message;
-            elements.statusDot.classList.remove("on", "error");
-            if (state) elements.statusDot.classList.add(state);
         }
 
         function renderStats(stats) {
@@ -630,13 +595,34 @@ function estimateOperations(totalCredit) {
 
             elements.lastUpdated.textContent = formatTimestamp(stats.updated_at);
             elements.statsCard.setAttribute("aria-busy", "false");
-            setStatus("Public statistics loaded", "on");
         }
 
+        async function loadStats() {
+            try {
+                const response = await fetch(STATS_URL + "?t=" + Date.now(), {
+                    cache: "no-store"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Stats request failed with HTTP " + response.status);
+                }
+
+                const stats = await response.json();
+                renderStats(stats);
+            } catch (error) {
+                console.error("Could not load Einstein@Home statistics:", error);
+                elements.lastUpdated.textContent =
+                    "Statistics could not be loaded. Please try again later.";
+                elements.statsCard.setAttribute("aria-busy", "false");
+            }
+        }
 
         renderEntries();
         loadStats();
     </script>
+</body>
+</html>
+
 </body>
 </html>
 
