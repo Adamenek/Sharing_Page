@@ -80,6 +80,7 @@
         .badge.pdf    { background: #fdeaea; color: #c0392b; }
         .badge.3d     { background: #eaf3fd; color: #2471a3; }
         .badge.project{ background: #eafaf1; color: #1e8449; }
+        .badge.boinc  { background: #f5f0fa; color: #7d3c98; }
 
         .entry-date {
             font-size: 0.8rem;
@@ -104,6 +105,61 @@
 
         .entry-links a:hover {
             text-decoration: underline;
+        }
+
+        .boinc-card {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .boinc-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .boinc-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #111;
+            letter-spacing: -0.3px;
+        }
+
+        .boinc-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .boinc-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #bbb;
+            flex-shrink: 0;
+        }
+
+        .dot.on {
+            background: #27ae60;
+        }
+
+        .boinc-note {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-top: 12px;
         }
 
         .widget-section {
@@ -143,6 +199,9 @@
             .entry {
                 padding: 20px;
             }
+            .boinc-card {
+                padding: 20px;
+            }
             .widget-card {
                 padding: 16px;
             }
@@ -154,6 +213,38 @@
     <div class="container">
         <h1>Sharing_Page</h1>
         <p class="subtitle">Adam</p>
+
+        <div class="boinc-card">
+            <div class="entry-header">
+                <div class="entry-title">Einstein@Home</div>
+                <span class="badge boinc">BOINC</span>
+            </div>
+            <div class="boinc-stats">
+                <div>
+                    <div class="boinc-value" id="boinc-flops">&mdash;</div>
+                    <div class="boinc-label">FLOPs (quintillion)</div>
+                </div>
+                <div>
+                    <div class="boinc-value" id="boinc-credit">&mdash;</div>
+                    <div class="boinc-label">Cobblestones</div>
+                </div>
+                <div>
+                    <div class="boinc-value" id="boinc-rac">&mdash;</div>
+                    <div class="boinc-label">Recent Avg Credit</div>
+                </div>
+                <div>
+                    <div class="boinc-status">
+                        <span class="dot" id="boinc-dot"></span>
+                        <span id="boinc-status-text">&hellip;</span>
+                    </div>
+                    <div class="boinc-label">BOINC status</div>
+                </div>
+            </div>
+            <div class="entry-links" style="margin-top: 16px;">
+                <a href="https://einsteinathome.org/de/account/336577" target="_blank" rel="noopener">View my profile &rarr;</a>
+            </div>
+            <div class="boinc-note" id="boinc-note"></div>
+        </div>
 
         <div id="entries"></div>
 
@@ -167,11 +258,65 @@
     </div>
 
     <script>
-        // ============================================
-        // ADD NEW ENTRIES HERE.
-        // type: "pdf" | "3d" | "project"
-        // links: as many as you want per entry
-        // ============================================
+        const boincCfg = {
+            boincId: 1065477,
+            flopsPerCredit: 4.32e11,
+            fallbackCredit: 0,
+            fallbackRac: 0
+        };
+
+        function readField(text, name) {
+            const m = text.match(new RegExp(name + '"?\\s*[:>]\\s*"?([\\d.]+)'));
+            return m ? parseFloat(m[1]) : null;
+        }
+
+        function renderBoinc(credit, rac, offline) {
+            const flops = credit * boincCfg.flopsPerCredit / 1e18;
+            document.getElementById('boinc-flops').textContent = flops.toFixed(flops < 0.01 ? 4 : 2);
+            document.getElementById('boinc-credit').textContent = Math.round(credit).toLocaleString('en-US');
+            document.getElementById('boinc-rac').textContent = Math.round(rac).toLocaleString('en-US');
+
+            const dot = document.getElementById('boinc-dot');
+            const txt = document.getElementById('boinc-status-text');
+            if (rac > 0) {
+                dot.classList.add('on');
+                txt.textContent = 'running';
+            } else {
+                txt.textContent = offline ? 'offline' : 'idle';
+            }
+
+            document.getElementById('boinc-note').textContent = offline
+                ? 'Live data unavailable, showing fallback values.'
+                : 'Status inferred from recent average credit.';
+        }
+
+        async function loadBoinc() {
+            const api = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
+            const sources = [
+                api,
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(api)
+            ];
+            for (const url of sources) {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) continue;
+                    const text = await res.text();
+                    const credit = readField(text, 'total_credit');
+                    const rac = readField(text, 'expavg_credit');
+                    if (credit !== null) {
+                        renderBoinc(credit, rac !== null ? rac : 0, false);
+                        return;
+                    }
+                } catch (e) {}
+            }
+            renderBoinc(boincCfg.fallbackCredit, boincCfg.fallbackRac, true);
+        }
+
+        loadBoinc();
+    </script>
+
+    <script>
+        // add entries above the marked line
         const entries = [
             {
                 title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
@@ -200,9 +345,7 @@
                     { label: "Open PDF →", url: "./Black Holes; We dont Know is not an equation.pdf" }
                 ]
             }
-            // <-- Add new entries above this line
         ];
-        // ============================================
 
         const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
 
