@@ -140,9 +140,51 @@
             text-transform: uppercase;
         }
 
+        .project-heading {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .project-title {
+            text-align: left;
+        }
+
+        .boinc-signature-link {
+            display: block;
+            margin-top: 16px;
+            padding: 14px;
+            border: 1px solid #e8e8e8;
+            border-radius: 9px;
+            background: #fbfbfd;
+            text-align: center;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .boinc-signature-link:hover {
+            border-color: #cfd8e6;
+            background: #f7f9fc;
+            text-decoration: none;
+        }
+
+        .boinc-signature-link img {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        .boinc-signature-caption {
+            display: block;
+            margin-top: 8px;
+            color: #666;
+            font-size: 0.78rem;
+        }
+
         .boinc-stats {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px;
         }
 
@@ -363,14 +405,21 @@
 
         <section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
             <div class="project-heading">
-                <span class="corner-flag" role="img" aria-label="Switzerland" title="Switzerland">🇨🇭</span>
                 <div class="project-title">
                     <p class="eyebrow">Volunteer computing</p>
                     <h2 id="einstein-title">Einstein@Home</h2>
                     <span class="badge">BOINC</span>
                 </div>
-                <span class="corner-flag" role="img" aria-label="Czechia" title="Czechia">🇨🇿</span>
             </div>
+
+            <a class="boinc-signature-link"
+               href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="Open BOINCstats Switzerland user statistics">
+                <img src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
+                     alt="BOINCstats project statistics signature">
+                <span class="boinc-signature-caption">View this profile on BOINCstats ↗</span>
+            </a>
 
             <div class="boinc-stats" aria-live="polite">
                 <div class="stat">
@@ -380,10 +429,6 @@
                 <div class="stat">
                     <div class="stat-label">Recent average credit</div>
                     <div class="stat-value" id="recent-credit">—</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-label">Member since</div>
-                    <div class="stat-value" id="member-since">—</div>
                 </div>
             </div>
 
@@ -501,7 +546,6 @@
         const profileUrl = `https://einsteinathome.org/de/userw.php?id=${userId}`;
         const totalCreditElement = document.getElementById("total-credit");
         const recentCreditElement = document.getElementById("recent-credit");
-        const memberSinceElement = document.getElementById("member-since");
         const totalFlopsElement = document.getElementById("total-flops");
         const statusDot = document.getElementById("status-dot");
         const statusText = document.getElementById("status-text");
@@ -722,7 +766,6 @@
         function renderStats(stats) {
             totalCreditElement.textContent = formatCredit(stats.totalCredit);
             recentCreditElement.textContent = formatCredit(stats.recentCredit);
-            memberSinceElement.textContent = formatDate(stats.memberSince);
 
             let operations = null;
             if (stats.totalOperations) {
