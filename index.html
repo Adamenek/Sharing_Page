@@ -14,17 +14,18 @@
         }
 
         :root {
-            color-scheme: light;
+            color-scheme: light dark;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #222;
             background: #fafafa;
         }
 
         body {
-            background: #fafafa;
-            color: #222;
+            background: var(--page-bg, #fafafa);
+            color: var(--text, #222);
             line-height: 1.6;
             padding: 60px 20px;
+            transition: background .2s, color .2s;
         }
 
         a {
@@ -324,6 +325,122 @@
             text-align: center;
         }
 
+
+        :root {
+            --page-bg: #fafafa;
+            --card-bg: #fff;
+            --text: #222;
+            --muted: #666;
+            --border: #e5e5e5;
+            --soft-bg: #f8f8f8;
+            --field-bg: #fff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --page-bg: #050505;
+                --card-bg: #0c0c0c;
+                --text: #f2f2f2;
+                --muted: #a3a3a3;
+                --border: #262626;
+                --soft-bg: #111111;
+                --field-bg: #090909;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --page-bg: #050505;
+            --card-bg: #0c0c0c;
+            --text: #f2f2f2;
+            --muted: #a3a3a3;
+            --border: #262626;
+            --soft-bg: #111111;
+            --field-bg: #090909;
+        }
+
+        :root[data-theme="light"] {
+            --page-bg: #fafafa;
+            --card-bg: #fff;
+            --text: #222;
+            --muted: #666;
+            --border: #e5e5e5;
+            --soft-bg: #f8f8f8;
+            --field-bg: #fff;
+        }
+
+        .top-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin: -12px 0 18px;
+        }
+
+        .theme-toggle, .search-controls input, .search-controls select {
+            font: inherit;
+            color: var(--text);
+            background: var(--field-bg);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 12px;
+        }
+
+        .theme-toggle { cursor: pointer; font-size: .85rem; }
+
+        .einstein-card, .entry, .stat, .flops-stat, .boinc-signature-link {
+            background-color: var(--card-bg);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .project-title h2, .stat-value, .flops-value, .entry-title {
+            color: var(--text);
+        }
+
+        .subtitle, .boinc-signature-caption, .stat-label, .flops-label,
+        .entry-date, .entry-desc, .last-updated {
+            color: var(--muted);
+        }
+
+        .boinc-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            border: 0;
+            padding: 12px 14px;
+            border-radius: 9px;
+            background: var(--soft-bg);
+            color: var(--text);
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .boinc-toggle span:last-child { color: var(--muted); font-size: .85rem; }
+        .boinc-details { margin-top: 16px; }
+        .boinc-details[hidden] { display: none; }
+
+        .search-panel { margin: 0 0 18px; }
+        .search-panel h2 { font-size: 1.15rem; margin-bottom: 10px; }
+        .search-controls { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 10px; }
+        .search-controls input { width: 100%; min-width: 0; }
+        .search-count { color: var(--muted); font-size: .8rem; margin-top: 8px; }
+        .entry-badge.picture { background: #f4edff; color: #7541a5; }
+        .entry-image { display: block; width: 100%; max-height: 360px; object-fit: cover; border-radius: 9px; margin: 12px 0 16px; }
+        .nasa-section { margin-top: 36px; padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); }
+        .nasa-section h2 { font-size: 1.25rem; margin-bottom: 4px; }
+        .nasa-meta { color: var(--muted); font-size: .82rem; margin-bottom: 14px; }
+        .nasa-image { display: block; width: 100%; max-height: 560px; object-fit: contain; border-radius: 9px; margin: 16px 0; background: var(--soft-bg); }
+        .nasa-explanation { color: var(--text); white-space: pre-line; }
+        .nasa-credit { color: var(--muted); font-size: .78rem; margin-top: 12px; }
+        .nasa-fallback { color: var(--muted); }
+
+        @media (max-width: 520px) {
+            .search-controls { grid-template-columns: 1fr; }
+            .top-controls { margin-top: -4px; }
+            .nasa-section { padding: 18px; }
+        }
+
         @media (max-width: 768px) {
             .stats-signature-layout {
                 grid-template-columns: 1fr;
@@ -379,6 +496,7 @@
 </head>
 <body>
     <main class="container">
+        <div class="top-controls"><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">Use dark mode</button></div>
         <header class="page-heading">
             <h1>Sharing_Page</h1>
             <p class="subtitle">Adam</p>
@@ -393,6 +511,8 @@
                 </div>
             </div>
 
+            <button class="boinc-toggle" id="boinc-toggle" type="button" aria-expanded="false" aria-controls="boinc-details"><span>BOINC statistics</span><span id="boinc-toggle-label">Show stats + signature ↓</span></button>
+            <div class="boinc-details" id="boinc-details" hidden>
             <div class="stats-signature-layout">
                 <div class="stats-column">
                     <div class="boinc-stats" aria-live="polite">
@@ -435,9 +555,29 @@
             </div>
 
             <p class="last-updated" id="last-updated">Last updated: waiting for statistics…</p>
+            </div>
         </section>
 
+
+        <section class="search-panel" aria-label="Search shared files">
+            <h2>Shared stuff</h2>
+            <div class="search-controls">
+                <input id="entry-search" type="search" placeholder="Search shared files…" aria-label="Search shared files">
+                <select id="entry-filter" aria-label="Filter by category">
+                    <option value="all">All categories</option>
+                    <option value="pdf">PDF</option>
+                    <option value="3d">3D File</option>
+                    <option value="project">Project</option>
+                    <option value="picture">Picture</option>
+                </select>
+            </div>
+            <p class="search-count" id="search-count" aria-live="polite"></p>
+        </section>
         <section id="entries" aria-label="Shared projects and files"></section>
+        <section class="nasa-section" id="nasa-of-the-day" aria-labelledby="nasa-title">
+            <h2 id="nasa-title">NASA picture of the day</h2>
+                        <div id="nasa-content" class="nasa-fallback">Loading today's NASA picture…</div>
+        </section>
     </main>
 
     <script>
@@ -474,10 +614,13 @@
         ];
 
         const STATS_URL = "./einstein-stats.json";
-        const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
+        const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project", picture: "Picture" };
 
         const elements = {
             entries: document.getElementById("entries"),
+            search: document.getElementById("entry-search"),
+            filter: document.getElementById("entry-filter"),
+            searchCount: document.getElementById("search-count"),
             totalCredit: document.getElementById("total-credit"),
             recentCredit: document.getElementById("recent-credit"),
             totalFlops: document.getElementById("total-flops"),
@@ -486,15 +629,26 @@
         };
 
         function renderEntries() {
-            if (entries.length === 0) {
+            const query = elements.search.value.trim().toLowerCase();
+            const category = elements.filter.value;
+            const filtered = entries.filter(item => {
+                const matchesCategory = category === "all" || item.type === category;
+                const searchable = [item.title, item.date, item.description, item.type].join(" ").toLowerCase();
+                return matchesCategory && searchable.includes(query);
+            });
+
+            elements.entries.replaceChildren();
+            elements.searchCount.textContent = `${filtered.length} item${filtered.length === 1 ? "" : "s"}`;
+
+            if (filtered.length === 0) {
                 const empty = document.createElement("div");
                 empty.className = "empty";
-                empty.textContent = "Nothing here yet.";
+                empty.textContent = entries.length ? "No matching items found." : "Nothing here yet.";
                 elements.entries.appendChild(empty);
                 return;
             }
 
-            for (const item of entries) {
+            for (const item of filtered) {
                 const article = document.createElement("article");
                 article.className = "entry";
 
@@ -522,10 +676,19 @@
                 description.textContent = item.description;
                 article.appendChild(description);
 
+                if (item.type === "picture" && item.image) {
+                    const image = document.createElement("img");
+                    image.className = "entry-image";
+                    image.src = item.image;
+                    image.alt = item.imageAlt || item.title;
+                    image.loading = "lazy";
+                    article.appendChild(image);
+                }
+
                 const links = document.createElement("div");
                 links.className = "entry-links";
 
-                for (const linkInfo of item.links) {
+                for (const linkInfo of item.links || []) {
                     const link = document.createElement("a");
                     link.href = linkInfo.url;
                     link.target = "_blank";
@@ -534,8 +697,74 @@
                     links.appendChild(link);
                 }
 
-                article.appendChild(links);
+                if (links.childElementCount) article.appendChild(links);
                 elements.entries.appendChild(article);
+            }
+        }
+
+        function setupTheme() {
+            const root = document.documentElement;
+            const button = document.getElementById("theme-toggle");
+            const stored = (() => {
+                try { return localStorage.getItem("sharing-page-theme"); } catch { return null; }
+            })();
+
+            if (stored === "light" || stored === "dark") root.dataset.theme = stored;
+
+            function updateButton() {
+                const dark = root.dataset.theme
+                    ? root.dataset.theme === "dark"
+                    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                button.textContent = dark ? "Use light mode" : "Use dark mode";
+                document.querySelector('meta[name="theme-color"]').content = dark ? "#050505" : "#fafafa";
+            }
+
+            button.addEventListener("click", () => {
+                const currentlyDark = root.dataset.theme
+                    ? root.dataset.theme === "dark"
+                    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                root.dataset.theme = currentlyDark ? "light" : "dark";
+                try { localStorage.setItem("sharing-page-theme", root.dataset.theme); } catch {}
+                updateButton();
+            });
+
+            updateButton();
+        }
+
+        async function loadNasaPicture() {
+            const container = document.getElementById("nasa-content");
+            try {
+                const response = await fetch("./nasa-today.json?t=" + Date.now(), { cache: "no-store" });
+                if (!response.ok) throw new Error("Daily NASA data is not available yet.");
+                const data = await response.json();
+                container.replaceChildren();
+
+                const title = document.createElement("h3");
+                title.textContent = data.title || "NASA picture";
+                container.appendChild(title);
+
+                if (data.media_type === "video") {
+                    const link = document.createElement("a");
+                    link.href = data.url;
+                    link.textContent = "Watch today's NASA video ↗";
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    container.appendChild(link);
+                } else if (data.url) {
+                    const image = document.createElement("img");
+                    image.className = "nasa-image";
+                    image.src = data.hdurl || data.url;
+                    image.alt = data.title || "NASA Astronomy Picture of the Day";
+                    image.loading = "lazy";
+                    container.appendChild(image);
+                }
+
+                const explanation = document.createElement("p");
+                explanation.className = "nasa-explanation";
+                explanation.textContent = data.explanation || "No description is available for this entry.";
+                container.appendChild(explanation);
+            } catch {
+                container.textContent = "NASA picture is not available yet.";
             }
         }
 
@@ -564,7 +793,6 @@
             const credit = Number(totalCredit);
             if (!Number.isFinite(credit) || credit < 0) return null;
 
-            // Approximation calibrated to the rounded Einstein@Home certificate figure.
             const operationsPerCredit = 12.04e18 / 13931940;
             return BigInt(Math.round(credit * operationsPerCredit));
         }
@@ -609,19 +837,30 @@
 
                 const stats = await response.json();
                 renderStats(stats);
-            } catch (error) {
-                console.error("Could not load Einstein@Home statistics:", error);
-                elements.lastUpdated.textContent =
-                    "Statistics could not be loaded. Please try again later.";
+            } catch {
                 elements.statsCard.setAttribute("aria-busy", "false");
             }
         }
 
+        document.getElementById("boinc-toggle").addEventListener("click", () => {
+            const button = document.getElementById("boinc-toggle");
+            const details = document.getElementById("boinc-details");
+            const expanded = button.getAttribute("aria-expanded") === "true";
+            button.setAttribute("aria-expanded", String(!expanded));
+            details.hidden = expanded;
+            document.getElementById("boinc-toggle-label").textContent = expanded ? "Show stats + signature ↓" : "Hide stats + signature ↑";
+        });
+
+        elements.search.addEventListener("input", renderEntries);
+        elements.filter.addEventListener("change", renderEntries);
+        setupTheme();
         renderEntries();
         loadStats();
+        loadNasaPicture();
     </script>
 </body>
 </html>
+
 
 </body>
 </html>
