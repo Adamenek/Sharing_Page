@@ -759,10 +759,60 @@
                     container.appendChild(image);
                 }
 
-                const explanation = document.createElement("p");
+               
+                const meta = document.createElement("p");
+                meta.className = "nasa-meta";
+                if (data.date) {
+                    meta.textContent = `Published ${data.date} · ${data.date.slice(0, 4)}`;
+                    container.appendChild(meta);
+                }
+
+                const explanation = document.createElement("div");
                 explanation.className = "nasa-explanation";
-                description.innerHTML = data.explanation; || "No description is available for this entry.";
+
+                let html = String(data.explanation || "")
+                    .replace(/^\s*<strong>\s*Explanation:\s*<\/strong>\s*/i, "")
+                    .replace(/(?:<br\s*\/?>\s*){1,2}<strong>\s*Tomorrow['’]s picture:\s*<\/strong>[\s\S]*$/i, "");
+
+                const parsed = new DOMParser().parseFromString(html, "text/html");
+                const allowedTags = new Set(["A", "STRONG", "B", "EM", "I", "BR", "P"]);
+
+                function cleanNASAContent(node) {
+                    for (const child of [...node.childNodes]) {
+                        if (child.nodeType !== Node.ELEMENT_NODE) continue;
+
+                        const tag = child.tagName;
+
+                        if (!allowedTags.has(tag)) {
+                            if (["SCRIPT", "STYLE", "IFRAME", "OBJECT", "SVG"].includes(tag)) {
+                                child.remove();
+                            } else {
+                                cleanNASAContent(child);
+                                child.replaceWith(...child.childNodes);
+                            }
+                            continue;
+                        }
+
+                        const href = tag === "A" ? child.getAttribute("href") : null;
+
+                        for (const attribute of [...child.attributes]) {
+                            child.removeAttribute(attribute.name);
+                        }
+
+                        if (tag === "A" && href && /^https?:\/\//i.test(href)) {
+                            child.setAttribute("href", href);
+                            child.setAttribute("target", "_blank");
+                            child.setAttribute("rel", "noopener noreferrer");
+                        }
+
+                        cleanNASAContent(child);
+                    }
+                }
+
+                cleanNASAContent(parsed.body);
+                explanation.innerHTML = parsed.body.innerHTML;
                 container.appendChild(explanation);
+
             } catch {
                 container.textContent = "NASA picture is not available yet.";
             }
