@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +13,33 @@
             box-sizing: border-box;
         }
 
+        :root {
+            color-scheme: light;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #222;
+            background: #fafafa;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #fafafa;
             color: #222;
             line-height: 1.6;
             padding: 60px 20px;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a:focus-visible {
+            outline: 2px solid #0066cc;
+            outline-offset: 3px;
+            border-radius: 3px;
         }
 
         .container {
@@ -26,7 +47,7 @@
             margin: 0 auto;
         }
 
-        h1 {
+        .page-heading h1 {
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 8px;
@@ -39,297 +60,295 @@
             margin-bottom: 32px;
         }
 
+        .einstein-card,
         .entry {
             background: #fff;
             border: 1px solid #e5e5e5;
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .entry:hover,
-        .boinc-card:hover {
-            border-color: #ccc;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        .einstein-card:hover,
+        .entry:hover {
+            border-color: #d7d7d7;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.035);
         }
 
-        .entry-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 4px;
-        }
-
-        .entry-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #111;
-        }
-
-        .badge {
-            flex-shrink: 0;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .badge.pdf {
-            background: #fdeaea;
-            color: #c0392b;
-        }
-
-        .badge.boinc {
-            background: #f5f0fa;
-            color: #7d3c98;
-        }
-
-        .entry-date {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 12px;
-        }
-
-        .entry-desc {
-            font-size: 0.95rem;
-            color: #444;
-            margin-bottom: 16px;
-        }
-
-        .entry-links a {
-            display: inline-block;
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-right: 16px;
-        }
-
-        .entry-links a:hover {
-            text-decoration: underline;
-        }
-
-        .boinc-card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
+        .einstein-card {
             padding: 24px;
             margin-bottom: 40px;
-            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .boinc-heading {
+        .project-heading {
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr) 34px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .corner-flag {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 16px;
+            justify-content: center;
+            width: 32px;
+            height: 25px;
+            border: 1px solid #ededed;
+            border-radius: 5px;
+            background: #fff;
+            font-size: 19px;
+            line-height: 1;
+            overflow: hidden;
         }
 
-        .boinc-heading-left {
+        .project-heading .corner-flag:last-child {
+            justify-self: end;
+        }
+
+        .project-title {
+            text-align: center;
             min-width: 0;
         }
 
-        .boinc-heading .entry-title {
+        .eyebrow {
+            color: #888;
+            font-size: 0.68rem;
+            font-weight: 650;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
             margin-bottom: 3px;
         }
 
-        .boinc-subtitle {
-            color: #888;
-            font-size: 0.8rem;
+        .project-title h2 {
+            color: #111;
+            font-size: 1.2rem;
+            font-weight: 650;
+            letter-spacing: -0.35px;
+            line-height: 1.35;
         }
 
-        .flags {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            flex-shrink: 0;
+        .badge {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #f5f0fa;
+            color: #7d3c98;
+            font-size: 0.66rem;
+            font-weight: 650;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
         }
 
-        .flag {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 26px;
-            font-size: 19px;
-            line-height: 1;
+        .boinc-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            min-width: 0;
+            padding: 14px;
             border: 1px solid #ededed;
-            border-radius: 6px;
-            background: #fafafa;
+            border-radius: 9px;
+            background: #fdfdfd;
         }
 
-        .boinc-divider {
-            height: 1px;
-            background: #eee;
-            margin: 20px 0;
+        .stat-label {
+            color: #888;
+            font-size: 0.76rem;
+            line-height: 1.35;
+            margin-bottom: 7px;
         }
 
-        .boinc-status-row {
+        .stat-value {
+            color: #111;
+            font-size: 1.04rem;
+            font-weight: 650;
+            letter-spacing: -0.25px;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .flops-stat {
+            margin-top: 12px;
+            padding: 17px;
+            border: 1px solid #e8e8e8;
+            border-radius: 9px;
+            background: #f8f8f8;
+        }
+
+        .flops-label {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 7px;
+        }
+
+        .flops-value {
+            color: #111;
+            font-size: clamp(1.04rem, 3.5vw, 1.48rem);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .flops-note {
+            color: #999;
+            font-size: 0.7rem;
+            line-height: 1.45;
+            margin-top: 5px;
+        }
+
+        .widget-footer {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
             gap: 12px;
+            margin-top: 18px;
         }
 
         .boinc-status {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #333;
-            font-size: 0.85rem;
-            font-weight: 500;
+            color: #777;
+            font-size: 0.78rem;
         }
 
         .dot {
             width: 8px;
             height: 8px;
+            flex: 0 0 auto;
             border-radius: 50%;
             background: #bbb;
-            flex-shrink: 0;
         }
 
         .dot.on {
             background: #27ae60;
         }
 
-        .refresh-button {
-            border: 1px solid #e5e5e5;
-            background: #fff;
-            color: #555;
-            padding: 6px 11px;
-            border-radius: 7px;
-            font: inherit;
+        .dot.error {
+            background: #c76b4f;
+        }
+
+        .profile-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
             font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
+            font-weight: 500;
         }
 
-        .refresh-button:hover {
-            background: #f7f7f7;
-            border-color: #ccc;
-        }
-
-        .refresh-button:disabled {
-            opacity: 0.55;
-            cursor: wait;
-        }
-
-        .boinc-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 22px 16px;
-            margin-top: 24px;
-        }
-
-        .boinc-stat {
-            min-width: 0;
-        }
-
-        .boinc-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #111;
-            letter-spacing: -0.4px;
-            overflow-wrap: anywhere;
-        }
-
-        .boinc-label {
-            font-size: 0.76rem;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        .boinc-note {
-            color: #999;
-            font-size: 0.76rem;
-            margin-top: 20px;
-        }
-
-        .boinc-link {
-            color: #666;
-            text-decoration: none;
-        }
-
-        .boinc-link:hover {
-            color: #0066cc;
-        }
-
-        .boinc-message {
-            padding: 22px 0 8px;
-            color: #888;
-            font-size: 0.88rem;
-        }
-
-        .boinc-message a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        .boinc-message a:hover {
-            text-decoration: underline;
-        }
-
-        .widget-section {
-            margin-top: 48px;
-        }
-
-        .widget-section h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-
-        .widget-section p {
-            color: #666;
-            font-size: 0.9rem;
+        .entry {
+            padding: 24px;
             margin-bottom: 16px;
         }
 
-        .widget-card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 24px;
+        .entry-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .entry-title {
+            color: #111;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .entry-badge {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .entry-badge.pdf {
+            background: #fdeaea;
+            color: #c0392b;
+        }
+
+        .entry-badge.3d {
+            background: #eaf3fd;
+            color: #2471a3;
+        }
+
+        .entry-badge.project {
+            background: #eafaf1;
+            color: #1e8449;
+        }
+
+        .entry-date {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        .entry-desc {
+            color: #444;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .entry-links a {
+            display: inline-block;
+            margin-right: 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .empty {
-            text-align: center;
-            color: #999;
             padding: 60px 20px;
+            color: #999;
+            text-align: center;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 520px) {
             body {
                 padding: 30px 16px;
             }
 
+            .einstein-card,
             .entry {
-                padding: 20px;
-            }
-
-            .boinc-card {
-                padding: 20px;
+                padding: 19px;
             }
 
             .boinc-stats {
-                gap: 20px 12px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .boinc-value {
-                font-size: 1.05rem;
+            .widget-footer {
+                align-items: flex-start;
+                flex-direction: column;
             }
 
-            .flag {
-                width: 27px;
-                height: 25px;
-                font-size: 17px;
+            .entry-header {
+                gap: 8px;
+            }
+
+            .entry-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
             }
         }
     </style>
@@ -337,51 +356,56 @@
 </head>
 <body>
     <main class="container">
-        <h1>Sharing_Page</h1>
-        <p class="subtitle">Adam</p>
+        <header class="page-heading">
+            <h1>Sharing_Page</h1>
+            <p class="subtitle">Adam</p>
+        </header>
 
-        <section class="boinc-card" aria-labelledby="boinc-title">
-            <div class="boinc-heading">
-                <div class="boinc-heading-left">
-                    <div class="entry-title" id="boinc-title">Einstein@Home</div>
-                    <div class="boinc-subtitle">Distributed computing</div>
+        <section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
+            <div class="project-heading">
+                <span class="corner-flag" role="img" aria-label="Switzerland" title="Switzerland">🇨🇭</span>
+                <div class="project-title">
+                    <p class="eyebrow">Volunteer computing</p>
+                    <h2 id="einstein-title">Einstein@Home</h2>
+                    <span class="badge">BOINC</span>
                 </div>
-                <div class="flags" aria-label="Switzerland and Czechia">
-                    <span class="flag" title="Switzerland" aria-label="Switzerland">🇨🇭</span>
-                    <span class="flag" title="Czechia" aria-label="Czechia">🇨🇿</span>
+                <span class="corner-flag" role="img" aria-label="Czechia" title="Czechia">🇨🇿</span>
+            </div>
+
+            <div class="boinc-stats" aria-live="polite">
+                <div class="stat">
+                    <div class="stat-label">Total credit</div>
+                    <div class="stat-value" id="total-credit">—</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Recent average credit</div>
+                    <div class="stat-value" id="recent-credit">—</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Member since</div>
+                    <div class="stat-value" id="member-since">—</div>
                 </div>
             </div>
 
-            <div class="boinc-divider"></div>
-
-            <div class="boinc-status-row">
-                <div class="boinc-status">
-                    <span class="dot" id="boinc-dot"></span>
-                    <span id="boinc-status">Connecting to profile</span>
-                </div>
-                <button class="refresh-button" id="boinc-refresh" type="button">Refresh ↻</button>
+            <div class="flops-stat">
+                <div class="flops-label">Estimated total floating-point operations</div>
+                <div class="flops-value" id="total-flops">—</div>
+                <div class="flops-note">Whole-number estimate based on BOINC credit; the project’s credit system may not equal an exact count of operations performed.</div>
             </div>
 
-            <div class="boinc-stats" id="boinc-stats" aria-live="polite">
-                <div class="boinc-stat">
-                    <div class="boinc-value">—</div>
-                    <div class="boinc-label">Total credit</div>
+            <div class="widget-footer">
+                <div class="boinc-status" role="status" aria-live="polite">
+                    <span class="dot" id="status-dot"></span>
+                    <span id="status-text">Loading public statistics…</span>
                 </div>
-                <div class="boinc-stat">
-                    <div class="boinc-value">—</div>
-                    <div class="boinc-label">Recent average credit</div>
+                <div class="profile-links">
+                    <a href="https://einsteinathome.org/de/userw.php?id=1065477" rel="noopener noreferrer">Einstein@Home profile ↗</a>
+                    <a href="https://www.boincstats.com" rel="noopener noreferrer">BOINCstats ↗</a>
                 </div>
-            </div>
-
-            <div class="boinc-message" id="boinc-message" hidden></div>
-
-            <div class="boinc-note">
-                <a class="boinc-link" href="https://einsteinathome.org/de/userw.php?id=1065477">View Einstein@Home profile ↗</a>
-                <span id="boinc-updated"></span>
             </div>
         </section>
 
-        <div id="entries"></div>
+        <section id="entries" aria-label="Shared projects and files"></section>
     </main>
 
     <script>
@@ -415,20 +439,21 @@
             }
         ];
 
-        const badgeLabels = {
-            pdf: "PDF",
-            "3d": "3D File",
-            project: "Project"
-        };
-
+        const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
         const entriesContainer = document.getElementById("entries");
 
-        if (entries.length === 0) {
-            entriesContainer.innerHTML = '<div class="empty">Nothing here yet. Add an entry above!</div>';
-        } else {
+        function renderEntries() {
+            if (entries.length === 0) {
+                const empty = document.createElement("div");
+                empty.className = "empty";
+                empty.textContent = "Nothing here yet.";
+                entriesContainer.appendChild(empty);
+                return;
+            }
+
             entries.forEach(item => {
-                const article = document.createElement("article");
-                article.className = "entry";
+                const entry = document.createElement("article");
+                entry.className = "entry";
 
                 const header = document.createElement("div");
                 header.className = "entry-header";
@@ -438,285 +463,297 @@
                 title.textContent = item.title;
 
                 const badge = document.createElement("span");
-                badge.className = "badge " + item.type;
+                badge.className = `entry-badge ${item.type}`;
                 badge.textContent = badgeLabels[item.type] || item.type;
 
                 header.append(title, badge);
+                entry.appendChild(header);
 
                 const date = document.createElement("div");
                 date.className = "entry-date";
                 date.textContent = item.date;
+                entry.appendChild(date);
 
                 const description = document.createElement("div");
                 description.className = "entry-desc";
                 description.textContent = item.description;
+                entry.appendChild(description);
 
                 const links = document.createElement("div");
                 links.className = "entry-links";
 
-                item.links.forEach(link => {
-                    const anchor = document.createElement("a");
-                    anchor.href = link.url;
-                    anchor.rel = "noopener noreferrer";
-                    anchor.textContent = link.label;
-                    links.appendChild(anchor);
+                item.links.forEach(linkInfo => {
+                    const link = document.createElement("a");
+                    link.href = linkInfo.url;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.textContent = linkInfo.label;
+                    links.appendChild(link);
                 });
 
-                article.append(header, date, description, links);
-                entriesContainer.appendChild(article);
+                entry.appendChild(links);
+                entriesContainer.appendChild(entry);
             });
         }
 
-        const profileUrl = "https://einsteinathome.org/de/userw.php?id=1065477";
-        const statsContainer = document.getElementById("boinc-stats");
-        const statusText = document.getElementById("boinc-status");
-        const statusDot = document.getElementById("boinc-dot");
-        const message = document.getElementById("boinc-message");
-        const updatedText = document.getElementById("boinc-updated");
-        const refreshButton = document.getElementById("boinc-refresh");
+        const userId = "1065477";
+        const xmlUrl = `https://einsteinathome.org/show_user.php?userid=${userId}&format=xml`;
+        const profileUrl = `https://einsteinathome.org/de/userw.php?id=${userId}`;
+        const totalCreditElement = document.getElementById("total-credit");
+        const recentCreditElement = document.getElementById("recent-credit");
+        const memberSinceElement = document.getElementById("member-since");
+        const totalFlopsElement = document.getElementById("total-flops");
+        const statusDot = document.getElementById("status-dot");
+        const statusText = document.getElementById("status-text");
+        const statsCard = document.querySelector(".einstein-card");
 
-        const statDefinitions = [
-            {
-                label: "Total credit",
-                pattern: /\btotal\s+credit\b/i
-            },
-            {
-                label: "Recent average credit",
-                pattern: /\b(?:recent\s+)?average\s+credit\b|\b RAC\b/i
-            },
-            {
-                label: "World rank",
-                pattern: /\bworld\s+rank\b|\bglobal\s+rank\b/i
-            },
-            {
-                label: "Country",
-                pattern: /\bcountry\b/i
-            },
-            {
-                label: "Team",
-                pattern: /\bteam\b/i
-            },
-            {
-                label: "Computers",
-                pattern: /\bcomputers?\b/i
-            },
-            {
-                label: "Joined",
-                pattern: /\bjoined\b|\bmember\s+since\b/i
+        function normalizeNumber(value) {
+            const match = String(value ?? "").replace(/\u00a0/g, " ").match(/[\d][\d\s.,]*/);
+            if (!match) return "";
+            let number = match[0].replace(/\s/g, "");
+
+            if (number.includes(",") && number.includes(".")) {
+                if (number.lastIndexOf(",") > number.lastIndexOf(".")) {
+                    number = number.replace(/\./g, "").replace(",", ".");
+                } else {
+                    number = number.replace(/,/g, "");
+                }
+            } else if (number.includes(",")) {
+                const parts = number.split(",");
+                const lastPart = parts[parts.length - 1];
+                if (parts.length > 2 || lastPart.length === 3) {
+                    number = parts.join("");
+                } else {
+                    number = `${parts.slice(0, -1).join("")}.${lastPart}`;
+                }
+            } else if (number.includes(".")) {
+                const parts = number.split(".");
+                if (parts.length > 2) {
+                    number = `${parts.slice(0, -1).join("")}.${parts[parts.length - 1]}`;
+                }
             }
-        ];
 
-        function setStatus(text, connected) {
-            statusText.textContent = text;
-            statusDot.classList.toggle("on", connected);
+            return /^\d+(?:\.\d+)?$/.test(number) ? number : "";
         }
 
-        function normalizeText(value) {
-            return value.replace(/\s+/g, " ").trim();
+        function findXmlValue(documentNode, tagNames) {
+            for (const tagName of tagNames) {
+                const element = documentNode.getElementsByTagName(tagName)[0];
+                if (element && element.textContent.trim()) return element.textContent.trim();
+            }
+            return "";
         }
 
-        function extractRows(documentNode) {
-            const rows = [];
+        function parseXmlStats(text) {
+            if (!text || !/<(?:\w+:)?user\b/i.test(text)) return null;
+            const xml = new DOMParser().parseFromString(text, "application/xml");
+            if (xml.querySelector("parsererror")) return null;
 
-            documentNode.querySelectorAll("tr").forEach(row => {
-                const cells = Array.from(row.querySelectorAll("th, td"))
-                    .map(cell => normalizeText(cell.textContent))
-                    .filter(Boolean);
+            const rawTotal = findXmlValue(xml, ["total_credit"]);
+            const totalCredit = normalizeNumber(rawTotal);
+            if (totalCredit === "") return null;
 
-                if (cells.length >= 2) {
-                    rows.push({
-                        label: cells[0].replace(/:$/, ""),
-                        value: cells.slice(1).join(" · ")
-                    });
-                }
-            });
-
-            documentNode.querySelectorAll("dt").forEach(term => {
-                const valueNode = term.nextElementSibling;
-
-                if (valueNode && valueNode.tagName.toLowerCase() === "dd") {
-                    rows.push({
-                        label: normalizeText(term.textContent).replace(/:$/, ""),
-                        value: normalizeText(valueNode.textContent)
-                    });
-                }
-            });
-
-            documentNode.querySelectorAll("li").forEach(item => {
-                const text = normalizeText(item.textContent);
-                const match = text.match(/^([^:]{2,45}):\s*(.+)$/);
-
-                if (match) {
-                    rows.push({
-                        label: match[1].trim(),
-                        value: match[2].trim()
-                    });
-                }
-            });
-
-            return rows;
+            return {
+                name: findXmlValue(xml, ["name"]) || "Adam",
+                totalCredit,
+                recentCredit: normalizeNumber(findXmlValue(xml, ["expavg_credit"])),
+                memberSince: findXmlValue(xml, ["create_time"]),
+                totalOperations: ""
+            };
         }
 
-        function formatValue(value) {
-            const cleaned = normalizeText(value);
+        function normalizedLabel(value) {
+            return String(value || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, " ")
+                .trim();
+        }
 
-            if (!cleaned) {
+        function findHtmlValue(documentNode, patterns) {
+            const rows = [...documentNode.querySelectorAll("tr")];
+            for (const row of rows) {
+                const cells = [...row.querySelectorAll("th, td")].map(cell => cell.textContent.trim()).filter(Boolean);
+                if (cells.length < 2) continue;
+                const label = normalizedLabel(cells[0]);
+                if (patterns.some(pattern => pattern.test(label))) return cells.slice(1).join(" ").trim();
+            }
+
+            const terms = [...documentNode.querySelectorAll("dt")];
+            for (const term of terms) {
+                const label = normalizedLabel(term.textContent);
+                if (!patterns.some(pattern => pattern.test(label))) continue;
+                const definition = term.nextElementSibling;
+                if (definition) return definition.textContent.trim();
+            }
+
+            const pageText = (documentNode.body?.textContent || "").replace(/\s+/g, " ");
+            const patternText = patterns.map(pattern => pattern.source).join("|");
+            const match = pageText.match(new RegExp(`(?:${patternText})\\s*[:：]?\\s*([\\d][\\d.,\\s\\u00a0]*)`, "i"));
+            return match ? match[1].trim() : "";
+        }
+
+        function parseHtmlStats(text) {
+            if (!text || !/credit|gutschrift|guthaben|boinc/i.test(text)) return null;
+            const html = new DOMParser().parseFromString(text, "text/html");
+            const totalRaw = findHtmlValue(html, [
+                /total credit/,
+                /total credits/,
+                /total credit granted/,
+                /total_credit/,
+                /gesamtgutschrift/,
+                /gesamtkredit/,
+                /gesamtguthaben/
+            ]);
+            const totalCredit = normalizeNumber(totalRaw);
+            if (totalCredit === "") return null;
+
+            const recentRaw = findHtmlValue(html, [
+                /recent average credit/,
+                /average credit/,
+                /expavg credit/,
+                /expavg_credit/,
+                /durchschnittliche gutschrift/,
+                /rac/
+            ]);
+            const memberSince = findHtmlValue(html, [
+                /member since/,
+                /joined/,
+                /create time/,
+                /create_time/,
+                /mitglied seit/,
+                /beigetreten/,
+                /registriert seit/
+            ]);
+            const operations = findHtmlValue(html, [
+                /total floating point operations/,
+                /total flops/,
+                /total fpops/,
+                /total operations/
+            ]);
+
+            return {
+                name: html.querySelector("h1")?.textContent.trim() || "Adam",
+                totalCredit,
+                recentCredit: normalizeNumber(recentRaw),
+                memberSince,
+                totalOperations: normalizeNumber(operations)
+            };
+        }
+
+        async function fetchStatsFrom(url) {
+            const candidates = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+                url
+            ];
+
+            for (const candidate of candidates) {
+                const controller = new AbortController();
+                const timeout = window.setTimeout(() => controller.abort(), 6000);
+                try {
+                    const response = await fetch(candidate, {
+                        cache: "no-store",
+                        signal: controller.signal,
+                        headers: { Accept: "application/xml, text/html, application/xhtml+xml" }
+                    });
+                    if (!response.ok) continue;
+                    const text = await response.text();
+                    const stats = parseXmlStats(text) || parseHtmlStats(text);
+                    if (stats) return stats;
+                } catch (error) {
+                } finally {
+                    window.clearTimeout(timeout);
+                }
+            }
+            return null;
+        }
+
+        function formatCredit(value) {
+            if (!value) return "—";
+            const number = Number(value);
+            if (!Number.isFinite(number)) return "—";
+            return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(number);
+        }
+
+        function formatDate(value) {
+            if (!value) return "—";
+            let date;
+            const text = String(value).trim();
+
+            if (/^\d{9,}$/.test(text)) {
+                date = new Date(Number(text) * 1000);
+            } else if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(text)) {
+                const [day, month, year] = text.split(".").map(Number);
+                date = new Date(year, month - 1, day);
+            } else {
+                date = new Date(text);
+            }
+
+            if (Number.isNaN(date.getTime())) return text;
+            return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(date);
+        }
+
+        function estimateOperations(credit) {
+            const normalized = normalizeNumber(credit);
+            if (!normalized) return null;
+            const [wholePart, fractionPart = ""] = normalized.split(".");
+            const creditMicros = BigInt(wholePart) * 1000000n + BigInt((fractionPart + "000000").slice(0, 6));
+            return creditMicros * 432000000000n / 1000000n;
+        }
+
+        function formatInteger(value) {
+            if (value === null || value === undefined || value === "") return "—";
+            try {
+                const integer = typeof value === "bigint" ? value : BigInt(String(value).split(".")[0]);
+                return integer.toLocaleString("en-US");
+            } catch (error) {
                 return "—";
             }
-
-            const numberMatch = cleaned.match(/^(-?\d[\d,.]*)(.*)$/);
-
-            if (numberMatch) {
-                const numberPart = numberMatch[1];
-                const suffix = numberMatch[2].trim();
-
-                if (/^\d+$/.test(numberPart)) {
-                    const formatted = Number(numberPart).toLocaleString("en-US");
-                    return suffix ? formatted + " " + suffix : formatted;
-                }
-            }
-
-            return cleaned.length > 48
-                ? cleaned.slice(0, 45) + "…"
-                : cleaned;
         }
 
-        function renderStats(rows) {
-            const normalizedRows = rows.map(row => ({
-                label: normalizeText(row.label),
-                value: normalizeText(row.value)
-            }));
-
-            const matched = [];
-            const used = new Set();
-
-            statDefinitions.forEach(definition => {
-                const index = normalizedRows.findIndex((row, i) =>
-                    !used.has(i) &&
-                    definition.pattern.test(row.label) &&
-                    row.value &&
-                    row.value !== row.label
-                );
-
-                if (index !== -1) {
-                    used.add(index);
-                    matched.push({
-                        label: definition.label,
-                        value: normalizedRows[index].value
-                    });
-                }
-            });
-
-            const displayStats = matched.filter(stat =>
-                stat.label !== "Recent average credit" ||
-                !matched.some(other =>
-                    other !== stat &&
-                    other.label === "Total credit" &&
-                    other.value === stat.value
-                )
-            );
-
-            if (displayStats.length === 0) {
-                return false;
-            }
-
-            statsContainer.replaceChildren();
-
-            displayStats.forEach(stat => {
-                const item = document.createElement("div");
-                item.className = "boinc-stat";
-
-                const value = document.createElement("div");
-                value.className = "boinc-value";
-                value.textContent = formatValue(stat.value);
-                value.title = stat.value;
-
-                const label = document.createElement("div");
-                label.className = "boinc-label";
-                label.textContent = stat.label;
-
-                item.append(value, label);
-                statsContainer.appendChild(item);
-            });
-
-            return true;
+        function setStatus(message, state) {
+            statusText.textContent = message;
+            statusDot.classList.remove("on", "error");
+            if (state) statusDot.classList.add(state);
         }
 
-        async function loadBoincStats() {
-            refreshButton.disabled = true;
-            message.hidden = true;
-            message.replaceChildren();
-            setStatus("Loading statistics", false);
+        function renderStats(stats) {
+            totalCreditElement.textContent = formatCredit(stats.totalCredit);
+            recentCreditElement.textContent = formatCredit(stats.recentCredit);
+            memberSinceElement.textContent = formatDate(stats.memberSince);
 
-            const proxyUrl =
-                "https://api.allorigins.win/raw?url=" +
-                encodeURIComponent(profileUrl);
-
-            try {
-                const response = await fetch(proxyUrl, {
-                    method: "GET",
-                    cache: "no-store",
-                    headers: {
-                        "Accept": "text/html"
-                    },
-                    signal: AbortSignal.timeout(15000)
-                });
-
-                if (!response.ok) {
-                    throw new Error("The data service returned HTTP " + response.status);
+            let operations = null;
+            if (stats.totalOperations) {
+                try {
+                    operations = BigInt(String(stats.totalOperations).split(".")[0]);
+                } catch (error) {
+                    operations = null;
                 }
-
-                const html = await response.text();
-
-                if (!html || html.length < 100) {
-                    throw new Error("The profile returned an empty response");
-                }
-
-                const parsedDocument = new DOMParser().parseFromString(html, "text/html");
-                const pageText = normalizeText(parsedDocument.body.textContent);
-
-                if (
-                    !pageText ||
-                    /cloudflare|access denied|captcha|temporarily blocked/i.test(pageText.slice(0, 500))
-                ) {
-                    throw new Error("The profile could not be read");
-                }
-
-                const rows = extractRows(parsedDocument);
-
-                if (!renderStats(rows)) {
-                    throw new Error("No recognizable statistics were found on the profile");
-                }
-
-                setStatus("Profile loaded", true);
-                updatedText.textContent = " · Updated " +
-                    new Date().toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    });
-            } catch (error) {
-                setStatus("Statistics unavailable", false);
-
-                message.replaceChildren();
-
-                const text = document.createElement("span");
-                text.textContent =
-                    "Live statistics could not be retrieved. The data proxy may be unavailable, or the profile layout may have changed. ";
-
-                const link = document.createElement("a");
-                link.href = profileUrl;
-                link.textContent = "Open profile ↗";
-
-                message.append(text, link);
-                message.hidden = false;
-            } finally {
-                refreshButton.disabled = false;
             }
+            if (operations === null) operations = estimateOperations(stats.totalCredit);
+            totalFlopsElement.textContent = operations === null ? "—" : formatInteger(operations);
+            statsCard.setAttribute("aria-busy", "false");
+            setStatus("Public statistics loaded", "on");
         }
 
-        refreshButton.addEventListener("click", loadBoincStats);
+        async function loadStats() {
+            setStatus("Loading public statistics…", "");
+            let stats = await fetchStatsFrom(xmlUrl);
+            if (!stats) stats = await fetchStatsFrom(profileUrl);
 
-        loadBoincStats();
+            if (!stats) {
+                statsCard.setAttribute("aria-busy", "false");
+                setStatus("Live statistics are unavailable right now", "error");
+                return;
+            }
+
+            renderStats(stats);
+        }
+
+        renderEntries();
+        loadStats();
     </script>
 </body>
 </html>
