@@ -433,7 +433,6 @@
                     <div class="flops-stat">
                         <div class="flops-label">Estimated total floating-point operations</div>
                         <div class="flops-value" id="total-flops">—</div>
-                        <div class="flops-note">Approximate estimate based on BOINC credit; not an official operations counter.</div>
                     </div>
                 </div>
 
@@ -449,11 +448,6 @@
             </div>
 
             <div class="widget-footer">
-                <div class="boinc-status" role="status" aria-live="polite">
-                    <span class="dot" id="status-dot"></span>
-                    <span id="status-text">Loading public statistics…</span>
-                </div>
-
                 <div class="profile-links">
                     <a href="https://einsteinathome.org/de/userw.php?id=1065477" rel="noopener noreferrer">
                         Einstein@Home profile ↗
@@ -593,14 +587,16 @@
             }
         }
 
-        function estimateOperations(totalCredit) {
-            const credit = Number(totalCredit);
-            if (!Number.isFinite(credit) || credit < 0) return null;
+        
+function estimateOperations(totalCredit) {
+    const credit = Number(totalCredit);
+    if (!Number.isFinite(credit) || credit < 0) return null;
+    // 13,931,940 cobblestones ≈ 12.04 quintillion operations.
+    const operationsPerCredit = 12.04e18 / 13931940;
 
-            // Retains the original page's estimate: 432 billion operations per credit.
-            // This is an approximation, not a directly measured BOINC field.
-            return BigInt(Math.round(credit * 432_000_000_000));
-        }
+    return BigInt(Math.round(credit * operationsPerCredit));
+}
+
 
         function formatTimestamp(value) {
             if (!value) return "Last updated: unavailable";
@@ -637,24 +633,6 @@
             setStatus("Public statistics loaded", "on");
         }
 
-        async function loadStats() {
-            setStatus("Loading public statistics…");
-
-            try {
-                const response = await fetch(STATS_URL, { cache: "no-store" });
-                if (!response.ok) {
-                    throw new Error(`Could not load stats JSON (HTTP ${response.status}).`);
-                }
-
-                const stats = await response.json();
-                renderStats(stats);
-            } catch (error) {
-                console.error("Einstein@Home stats could not be loaded:", error);
-                elements.statsCard.setAttribute("aria-busy", "false");
-                elements.lastUpdated.textContent = "Last updated: unavailable";
-                setStatus("Statistics unavailable; please try again later", "error");
-            }
-        }
 
         renderEntries();
         loadStats();
