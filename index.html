@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#fafafa">
+    <meta name="description" content="Adam's shared projects and Einstein@Home volunteer computing statistics.">
     <title>Sharing_Page</title>
     <style>
         * {
@@ -265,6 +266,16 @@
             font-weight: 500;
         }
 
+        .last-updated {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.72rem;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
         .entry {
             padding: 24px;
             margin-bottom: 16px;
@@ -341,6 +352,10 @@
             .stats-signature-layout {
                 grid-template-columns: 1fr;
             }
+
+            .boinc-signature-link {
+                max-width: 320px;
+            }
         }
 
         @media (max-width: 520px) {
@@ -368,6 +383,10 @@
 
             .entry-title {
                 font-size: 1rem;
+            }
+
+            .last-updated {
+                text-align: left;
             }
         }
 
@@ -397,6 +416,7 @@
                     <span class="badge">BOINC</span>
                 </div>
             </div>
+
             <div class="stats-signature-layout">
                 <div class="stats-column">
                     <div class="boinc-stats" aria-live="polite">
@@ -404,7 +424,6 @@
                             <div class="stat-label">Total credit</div>
                             <div class="stat-value" id="total-credit">—</div>
                         </div>
-
                         <div class="stat">
                             <div class="stat-label">Recent average credit</div>
                             <div class="stat-value" id="recent-credit">—</div>
@@ -412,29 +431,20 @@
                     </div>
 
                     <div class="flops-stat">
-                        <div class="flops-label">
-                            Estimated total floating-point operations
-                        </div>
+                        <div class="flops-label">Estimated total floating-point operations</div>
                         <div class="flops-value" id="total-flops">—</div>
-                        <div class="flops-note">
-                            Whole-number estimate based on BOINC credit
-                        </div>
+                        <div class="flops-note">Approximate estimate based on BOINC credit; not an official operations counter.</div>
                     </div>
                 </div>
 
                 <a class="boinc-signature-link"
                    href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
-                   target="_blank"
                    rel="noopener noreferrer"
                    aria-label="Open BOINCstats user statistics">
-
                     <img
                         src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
                         alt="BOINCstats project statistics signature">
-
-                    <span class="boinc-signature-caption">
-                        View on BOINCstats ↗
-                    </span>
+                    <span class="boinc-signature-caption">View on BOINCstats ↗</span>
                 </a>
             </div>
 
@@ -445,22 +455,25 @@
                 </div>
 
                 <div class="profile-links">
-                    <a href="https://einsteinathome.org/de/userw.php?id=1065477"
-                       rel="noopener noreferrer">
+                    <a href="https://einsteinathome.org/de/userw.php?id=1065477" rel="noopener noreferrer">
                         Einstein@Home profile ↗
                     </a>
-                    <a href="https://www.boincstats.com"
-                       rel="noopener noreferrer">
+                    <a href="https://www.boincstats.com" rel="noopener noreferrer">
                         BOINCstats ↗
                     </a>
                 </div>
             </div>
+
+            <p class="last-updated" id="last-updated">Last updated: waiting for statistics…</p>
         </section>
 
         <section id="entries" aria-label="Shared projects and files"></section>
     </main>
 
     <script>
+        "use strict";
+
+        // Keep shared items in this list so new projects and files are easy to add.
         const entries = [
             {
                 title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
@@ -491,21 +504,32 @@
             }
         ];
 
+        const STATS_URL = "./einstein-stats.json";
         const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
-        const entriesContainer = document.getElementById("entries");
+
+        const elements = {
+            entries: document.getElementById("entries"),
+            totalCredit: document.getElementById("total-credit"),
+            recentCredit: document.getElementById("recent-credit"),
+            totalFlops: document.getElementById("total-flops"),
+            statusDot: document.getElementById("status-dot"),
+            statusText: document.getElementById("status-text"),
+            lastUpdated: document.getElementById("last-updated"),
+            statsCard: document.querySelector(".einstein-card")
+        };
 
         function renderEntries() {
             if (entries.length === 0) {
                 const empty = document.createElement("div");
                 empty.className = "empty";
                 empty.textContent = "Nothing here yet.";
-                entriesContainer.appendChild(empty);
+                elements.entries.appendChild(empty);
                 return;
             }
 
-            entries.forEach(item => {
-                const entry = document.createElement("article");
-                entry.className = "entry";
+            for (const item of entries) {
+                const article = document.createElement("article");
+                article.className = "entry";
 
                 const header = document.createElement("div");
                 header.className = "entry-header";
@@ -519,285 +543,117 @@
                 badge.textContent = badgeLabels[item.type] || item.type;
 
                 header.append(title, badge);
-                entry.appendChild(header);
+                article.appendChild(header);
 
                 const date = document.createElement("div");
                 date.className = "entry-date";
                 date.textContent = item.date;
-                entry.appendChild(date);
+                article.appendChild(date);
 
                 const description = document.createElement("div");
                 description.className = "entry-desc";
                 description.textContent = item.description;
-                entry.appendChild(description);
+                article.appendChild(description);
 
                 const links = document.createElement("div");
                 links.className = "entry-links";
 
-                item.links.forEach(linkInfo => {
+                for (const linkInfo of item.links) {
                     const link = document.createElement("a");
                     link.href = linkInfo.url;
                     link.target = "_blank";
                     link.rel = "noopener noreferrer";
                     link.textContent = linkInfo.label;
                     links.appendChild(link);
-                });
-
-                entry.appendChild(links);
-                entriesContainer.appendChild(entry);
-            });
-        }
-
-        const userId = "1065477";
-        const xmlUrl = `https://einsteinathome.org/show_user.php?userid=${userId}&format=xml`;
-        const profileUrl = `https://einsteinathome.org/de/userw.php?id=${userId}`;
-        const totalCreditElement = document.getElementById("total-credit");
-        const recentCreditElement = document.getElementById("recent-credit");
-        const totalFlopsElement = document.getElementById("total-flops");
-        const statusDot = document.getElementById("status-dot");
-        const statusText = document.getElementById("status-text");
-        const statsCard = document.querySelector(".einstein-card");
-
-        function normalizeNumber(value) {
-            const match = String(value ?? "").replace(/\u00a0/g, " ").match(/[\d][\d\s.,]*/);
-            if (!match) return "";
-            let number = match[0].replace(/\s/g, "");
-
-            if (number.includes(",") && number.includes(".")) {
-                if (number.lastIndexOf(",") > number.lastIndexOf(".")) {
-                    number = number.replace(/\./g, "").replace(",", ".");
-                } else {
-                    number = number.replace(/,/g, "");
                 }
-            } else if (number.includes(",")) {
-                const parts = number.split(",");
-                const lastPart = parts[parts.length - 1];
-                if (parts.length > 2 || lastPart.length === 3) {
-                    number = parts.join("");
-                } else {
-                    number = `${parts.slice(0, -1).join("")}.${lastPart}`;
-                }
-            } else if (number.includes(".")) {
-                const parts = number.split(".");
-                if (parts.length > 2) {
-                    number = `${parts.slice(0, -1).join("")}.${parts[parts.length - 1]}`;
-                }
+
+                article.appendChild(links);
+                elements.entries.appendChild(article);
             }
-
-            return /^\d+(?:\.\d+)?$/.test(number) ? number : "";
         }
 
-        function findXmlValue(documentNode, tagNames) {
-            for (const tagName of tagNames) {
-                const element = documentNode.getElementsByTagName(tagName)[0];
-                if (element && element.textContent.trim()) return element.textContent.trim();
-            }
-            return "";
-        }
-
-        function parseXmlStats(text) {
-            if (!text || !/<(?:\w+:)?user\b/i.test(text)) return null;
-            const xml = new DOMParser().parseFromString(text, "application/xml");
-            if (xml.querySelector("parsererror")) return null;
-
-            const rawTotal = findXmlValue(xml, ["total_credit"]);
-            const totalCredit = normalizeNumber(rawTotal);
-            if (totalCredit === "") return null;
-
-            return {
-                name: findXmlValue(xml, ["name"]) || "Adam",
-                totalCredit,
-                recentCredit: normalizeNumber(findXmlValue(xml, ["expavg_credit"])),
-                memberSince: findXmlValue(xml, ["create_time"]),
-                totalOperations: ""
-            };
-        }
-
-        function normalizedLabel(value) {
-            return String(value || "")
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, " ")
-                .trim();
-        }
-
-        function findHtmlValue(documentNode, patterns) {
-            const rows = [...documentNode.querySelectorAll("tr")];
-            for (const row of rows) {
-                const cells = [...row.querySelectorAll("th, td")].map(cell => cell.textContent.trim()).filter(Boolean);
-                if (cells.length < 2) continue;
-                const label = normalizedLabel(cells[0]);
-                if (patterns.some(pattern => pattern.test(label))) return cells.slice(1).join(" ").trim();
-            }
-
-            const terms = [...documentNode.querySelectorAll("dt")];
-            for (const term of terms) {
-                const label = normalizedLabel(term.textContent);
-                if (!patterns.some(pattern => pattern.test(label))) continue;
-                const definition = term.nextElementSibling;
-                if (definition) return definition.textContent.trim();
-            }
-
-            const pageText = (documentNode.body?.textContent || "").replace(/\s+/g, " ");
-            const patternText = patterns.map(pattern => pattern.source).join("|");
-            const match = pageText.match(new RegExp(`(?:${patternText})\\s*[:：]?\\s*([\\d][\\d.,\\s\\u00a0]*)`, "i"));
-            return match ? match[1].trim() : "";
-        }
-
-        function parseHtmlStats(text) {
-            if (!text || !/credit|gutschrift|guthaben|boinc/i.test(text)) return null;
-            const html = new DOMParser().parseFromString(text, "text/html");
-            const totalRaw = findHtmlValue(html, [
-                /total credit/,
-                /total credits/,
-                /total credit granted/,
-                /total_credit/,
-                /gesamtgutschrift/,
-                /gesamtkredit/,
-                /gesamtguthaben/
-            ]);
-            const totalCredit = normalizeNumber(totalRaw);
-            if (totalCredit === "") return null;
-
-            const recentRaw = findHtmlValue(html, [
-                /recent average credit/,
-                /average credit/,
-                /expavg credit/,
-                /expavg_credit/,
-                /durchschnittliche gutschrift/,
-                /rac/
-            ]);
-            const memberSince = findHtmlValue(html, [
-                /member since/,
-                /joined/,
-                /create time/,
-                /create_time/,
-                /mitglied seit/,
-                /beigetreten/,
-                /registriert seit/
-            ]);
-            const operations = findHtmlValue(html, [
-                /total floating point operations/,
-                /total flops/,
-                /total fpops/,
-                /total operations/
-            ]);
-
-            return {
-                name: html.querySelector("h1")?.textContent.trim() || "Adam",
-                totalCredit,
-                recentCredit: normalizeNumber(recentRaw),
-                memberSince,
-                totalOperations: normalizeNumber(operations)
-            };
-        }
-
-        async function fetchStatsFrom(url) {
-            const candidates = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-                url
-            ];
-
-            for (const candidate of candidates) {
-                const controller = new AbortController();
-                const timeout = window.setTimeout(() => controller.abort(), 6000);
-                try {
-                    const response = await fetch(candidate, {
-                        cache: "no-store",
-                        signal: controller.signal,
-                        headers: { Accept: "application/xml, text/html, application/xhtml+xml" }
-                    });
-                    if (!response.ok) continue;
-                    const text = await response.text();
-                    const stats = parseXmlStats(text) || parseHtmlStats(text);
-                    if (stats) return stats;
-                } catch (error) {
-                } finally {
-                    window.clearTimeout(timeout);
-                }
-            }
-            return null;
-        }
-
-        function formatCredit(value) {
-            if (!value) return "—";
+        function formatNumber(value, maximumFractionDigits = 2) {
             const number = Number(value);
-            if (!Number.isFinite(number)) return "—";
-            return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(number);
-        }
-
-        function formatDate(value) {
-            if (!value) return "—";
-            let date;
-            const text = String(value).trim();
-
-            if (/^\d{9,}$/.test(text)) { date = new Date(Number(text) * 1000); } else if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(text)) {
-                const [day, month, year] = text.split(".").map(Number);
-                date = new Date(year, month - 1, day);
-            } else {
-                date = new Date(text);
+            if (value === null || value === undefined || value === "" || !Number.isFinite(number)) {
+                return "—";
             }
 
-            if (Number.isNaN(date.getTime())) return text;
-            return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(date);
-        }
-
-        function estimateOperations(credit) {
-            const normalized = normalizeNumber(credit);
-            if (!normalized) return null;
-            const [wholePart, fractionPart = ""] = normalized.split(".");
-            const creditMicros = BigInt(wholePart) * 1000000n + BigInt((fractionPart + "000000").slice(0, 6));
-            return creditMicros * 432000000000n / 1000000n;
+            return new Intl.NumberFormat("en-US", {
+                maximumFractionDigits
+            }).format(number);
         }
 
         function formatInteger(value) {
             if (value === null || value === undefined || value === "") return "—";
+
             try {
-                const integer = typeof value === "bigint" ? value : BigInt(String(value).split(".")[0]);
-                return integer.toLocaleString("en-US");
-            } catch (error) {
+                return BigInt(String(value)).toLocaleString("en-US");
+            } catch {
                 return "—";
             }
         }
 
-        function setStatus(message, state) {
-            statusText.textContent = message;
-            statusDot.classList.remove("on", "error");
-            if (state) statusDot.classList.add(state);
+        function estimateOperations(totalCredit) {
+            const credit = Number(totalCredit);
+            if (!Number.isFinite(credit) || credit < 0) return null;
+
+            // Retains the original page's estimate: 432 billion operations per credit.
+            // This is an approximation, not a directly measured BOINC field.
+            return BigInt(Math.round(credit * 432_000_000_000));
+        }
+
+        function formatTimestamp(value) {
+            if (!value) return "Last updated: unavailable";
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return "Last updated: unavailable";
+
+            return "Last updated: " + new Intl.DateTimeFormat(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short",
+                timeZoneName: "short"
+            }).format(date);
+        }
+
+        function setStatus(message, state = "") {
+            elements.statusText.textContent = message;
+            elements.statusDot.classList.remove("on", "error");
+            if (state) elements.statusDot.classList.add(state);
         }
 
         function renderStats(stats) {
-            totalCreditElement.textContent = formatCredit(stats.totalCredit);
-            recentCreditElement.textContent = formatCredit(stats.recentCredit);
-
-            let operations = null;
-            if (stats.totalOperations) {
-                try {
-                    operations = BigInt(String(stats.totalOperations).split(".")[0]);
-                } catch (error) {
-                    operations = null;
-                }
+            if (!stats || !Number.isFinite(Number(stats.total_credit))) {
+                throw new Error("The JSON file does not contain a valid total_credit value.");
             }
-            if (operations === null) operations = estimateOperations(stats.totalCredit);
-            totalFlopsElement.textContent = operations === null ? "—" : formatInteger(operations);
-            statsCard.setAttribute("aria-busy", "false");
+
+            elements.totalCredit.textContent = formatNumber(stats.total_credit);
+            elements.recentCredit.textContent = formatNumber(stats.expavg_credit);
+
+            const operations = estimateOperations(stats.total_credit);
+            elements.totalFlops.textContent = operations === null ? "—" : formatInteger(operations);
+
+            elements.lastUpdated.textContent = formatTimestamp(stats.updated_at);
+            elements.statsCard.setAttribute("aria-busy", "false");
             setStatus("Public statistics loaded", "on");
         }
 
         async function loadStats() {
-            setStatus("Loading public statistics…", "");
-            let stats = await fetchStatsFrom(xmlUrl);
-            if (!stats) stats = await fetchStatsFrom(profileUrl);
+            setStatus("Loading public statistics…");
 
-            if (!stats) {
-                statsCard.setAttribute("aria-busy", "false");
-                setStatus("Live statistics are unavailable right now", "error");
-                return;
+            try {
+                const response = await fetch(STATS_URL, { cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error(`Could not load stats JSON (HTTP ${response.status}).`);
+                }
+
+                const stats = await response.json();
+                renderStats(stats);
+            } catch (error) {
+                console.error("Einstein@Home stats could not be loaded:", error);
+                elements.statsCard.setAttribute("aria-busy", "false");
+                elements.lastUpdated.textContent = "Last updated: unavailable";
+                setStatus("Statistics unavailable; please try again later", "error");
             }
-
-            renderStats(stats);
         }
 
         renderEntries();
@@ -805,3 +661,4 @@
     </script>
 </body>
 </html>
+
