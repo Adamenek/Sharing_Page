@@ -77,9 +77,12 @@ jobs:
           print(json.dumps(data, indent=2))
           PY
 
+     
       - name: Commit updated stats
         run: |
-          if git diff --quiet -- einstein-stats.json; then
+          git add einstein-stats.json
+
+          if git diff --cached --quiet; then
             echo "Stats have not changed."
             exit 0
           fi
@@ -87,6 +90,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "Update Einstein@Home stats"
+          git push
+
 
           git add einstein-stats.json
           git commit -m "Update Einstein@Home stats"
