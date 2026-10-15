@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,33 +79,13 @@
         }
 
         .project-heading {
-            display: grid;
-            grid-template-columns: 34px minmax(0, 1fr) 34px;
-            align-items: center;
-            gap: 12px;
+            display: flex;
+            justify-content: flex-start;
             margin-bottom: 24px;
         }
 
-        .corner-flag {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 25px;
-            border: 1px solid #ededed;
-            border-radius: 5px;
-            background: #fff;
-            font-size: 19px;
-            line-height: 1;
-            overflow: hidden;
-        }
-
-        .project-heading .corner-flag:last-child {
-            justify-self: end;
-        }
-
         .project-title {
-            text-align: center;
+            text-align: left;
             min-width: 0;
         }
 
@@ -140,18 +119,19 @@
             text-transform: uppercase;
         }
 
-        .project-heading {
-            display: flex;
-            justify-content: flex-start;
+        .stats-signature-layout {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
         }
 
-        .project-title {
-            text-align: left;
+        .stats-column {
+            min-width: 0;
         }
 
         .boinc-signature-link {
             display: block;
-            margin-top: 16px;
             padding: 14px;
             border: 1px solid #e8e8e8;
             border-radius: 9px;
@@ -357,6 +337,12 @@
             text-align: center;
         }
 
+        @media (max-width: 768px) {
+            .stats-signature-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 520px) {
             body {
                 padding: 30px 16px;
@@ -393,77 +379,6 @@
                 scroll-behavior: auto !important;
             }
         }
-    css
-/* Stats on the left and BOINC PNG on the right */
-.stats-signature-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 24px;
-    margin-top: 20px;
-}
-
-.stats-column {
-    min-width: 0;
-}
-
-/* Keep the two credit stats side by side */
-.boinc-stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-}
-
-/* BOINCstats signature */
-.boinc-signature-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    max-width: 100%;
-    text-decoration: none;
-}
-
-.boinc-signature-link img {
-    display: block;
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-    object-fit: contain;
-}
-
-.boinc-signature-caption {
-    font-size: 0.8rem;
-    text-align: center;
-    opacity: 0.75;
-}
-
-.boinc-signature-link:hover .boinc-signature-caption {
-    opacity: 1;
-    text-decoration: underline;
-}
-
-/* Floating-point statistic below the credit stats */
-.flops-stat {
-    margin-top: 20px;
-}
-
-/* Responsive layout for phones */
-@media (max-width: 600px) {
-    .stats-signature-layout {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .boinc-signature-link {
-        align-items: flex-start;
-    }
-
-    .boinc-signature-link img {
-        max-width: 260px;
-    }
-}
     </style>
     <base target="_blank">
 </head>
@@ -474,73 +389,73 @@
             <p class="subtitle">Adam</p>
         </header>
 
-<section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
-    <div class="project-heading">
-        <div class="project-title">
-            <p class="eyebrow">Volunteer computing</p>
-            <h2 id="einstein-title">Einstein@Home</h2>
-            <span class="badge">BOINC</span>
-        </div>
-    </div>
-    <div class="stats-signature-layout">
-        <div class="stats-column">
-            <div class="boinc-stats" aria-live="polite">
-                <div class="stat">
-                    <div class="stat-label">Total credit</div>
-                    <div class="stat-value" id="total-credit">—</div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-label">Recent average credit</div>
-                    <div class="stat-value" id="recent-credit">—</div>
+        <section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
+            <div class="project-heading">
+                <div class="project-title">
+                    <p class="eyebrow">Volunteer computing</p>
+                    <h2 id="einstein-title">Einstein@Home</h2>
+                    <span class="badge">BOINC</span>
                 </div>
             </div>
+            <div class="stats-signature-layout">
+                <div class="stats-column">
+                    <div class="boinc-stats" aria-live="polite">
+                        <div class="stat">
+                            <div class="stat-label">Total credit</div>
+                            <div class="stat-value" id="total-credit">—</div>
+                        </div>
 
-            <div class="flops-stat">
-                <div class="flops-label">
-                    Estimated total floating-point operations
+                        <div class="stat">
+                            <div class="stat-label">Recent average credit</div>
+                            <div class="stat-value" id="recent-credit">—</div>
+                        </div>
+                    </div>
+
+                    <div class="flops-stat">
+                        <div class="flops-label">
+                            Estimated total floating-point operations
+                        </div>
+                        <div class="flops-value" id="total-flops">—</div>
+                        <div class="flops-note">
+                            Whole-number estimate based on BOINC credit
+                        </div>
+                    </div>
                 </div>
-                <div class="flops-value" id="total-flops">—</div>
-                <div class="flops-note">
-                    Whole-number estimate based on BOINC credit
+
+                <a class="boinc-signature-link"
+                   href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Open BOINCstats user statistics">
+
+                    <img
+                        src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
+                        alt="BOINCstats project statistics signature">
+
+                    <span class="boinc-signature-caption">
+                        View on BOINCstats ↗
+                    </span>
+                </a>
+            </div>
+
+            <div class="widget-footer">
+                <div class="boinc-status" role="status" aria-live="polite">
+                    <span class="dot" id="status-dot"></span>
+                    <span id="status-text">Loading public statistics…</span>
+                </div>
+
+                <div class="profile-links">
+                    <a href="https://einsteinathome.org/de/userw.php?id=1065477"
+                       rel="noopener noreferrer">
+                        Einstein@Home profile ↗
+                    </a>
+                    <a href="https://www.boincstats.com"
+                       rel="noopener noreferrer">
+                        BOINCstats ↗
+                    </a>
                 </div>
             </div>
-        </div>
-
-        <a class="boinc-signature-link"
-           href="https://www.boincstats.com/stats/5/user/list/0/0/Switzerland/#59"
-           target="_blank"
-           rel="noopener noreferrer"
-           aria-label="Open BOINCstats user statistics">
-
-            <img
-                src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png"
-                alt="BOINCstats project statistics signature">
-
-            <span class="boinc-signature-caption">
-                View on BOINCstats ↗
-            </span>
-        </a>
-    </div>
-
-    <div class="widget-footer">
-        <div class="boinc-status" role="status" aria-live="polite">
-            <span class="dot" id="status-dot"></span>
-            <span id="status-text">Loading public statistics…</span>
-        </div>
-
-        <div class="profile-links">
-            <a href="https://einsteinathome.org/de/userw.php?id=1065477"
-               rel="noopener noreferrer">
-                Einstein@Home profile ↗
-            </a>
-            <a href="https://www.boincstats.com"
-               rel="noopener noreferrer">
-                BOINCstats ↗
-            </a>
-        </div>
-    </div>
-</section>
+        </section>
 
         <section id="entries" aria-label="Shared projects and files"></section>
     </main>
@@ -818,9 +733,7 @@
             let date;
             const text = String(value).trim();
 
-            if (/^\d{9,}$/.test(text)) {
-                date = new Date(Number(text) * 1000);
-            } else if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(text)) {
+            if (/^\d{9,}$/.test(text)) { date = new Date(Number(text) * 1000); } else if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(text)) {
                 const [day, month, year] = text.split(".").map(Number);
                 date = new Date(year, month - 1, day);
             } else {
