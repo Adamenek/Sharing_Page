@@ -393,6 +393,77 @@
                 scroll-behavior: auto !important;
             }
         }
+    css
+/* Stats on the left and BOINC PNG on the right */
+.stats-signature-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.stats-column {
+    min-width: 0;
+}
+
+/* Keep the two credit stats side by side */
+.boinc-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+/* BOINCstats signature */
+.boinc-signature-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    max-width: 100%;
+    text-decoration: none;
+}
+
+.boinc-signature-link img {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    object-fit: contain;
+}
+
+.boinc-signature-caption {
+    font-size: 0.8rem;
+    text-align: center;
+    opacity: 0.75;
+}
+
+.boinc-signature-link:hover .boinc-signature-caption {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Floating-point statistic below the credit stats */
+.flops-stat {
+    margin-top: 20px;
+}
+
+/* Responsive layout for phones */
+@media (max-width: 600px) {
+    .stats-signature-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .boinc-signature-link {
+        align-items: flex-start;
+    }
+
+    .boinc-signature-link img {
+        max-width: 260px;
+    }
+}
     </style>
     <base target="_blank">
 </head>
@@ -403,7 +474,6 @@
             <p class="subtitle">Adam</p>
         </header>
 
-       ```html
 <section class="einstein-card" aria-labelledby="einstein-title" aria-busy="true">
     <div class="project-heading">
         <div class="project-title">
