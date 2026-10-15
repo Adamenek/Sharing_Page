@@ -1,8 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fafafa">
     <title>Sharing_Page</title>
     <style>
         * {
@@ -34,7 +36,7 @@
         .subtitle {
             color: #666;
             font-size: 0.95rem;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .entry {
@@ -46,14 +48,15 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .entry:hover {
+        .entry:hover,
+        .boinc-card:hover {
             border-color: #ccc;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .entry-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 12px;
             margin-bottom: 4px;
@@ -77,10 +80,15 @@
             color: #666;
         }
 
-        .badge.pdf    { background: #fdeaea; color: #c0392b; }
-        .badge.3d     { background: #eaf3fd; color: #2471a3; }
-        .badge.project{ background: #eafaf1; color: #1e8449; }
-        .badge.boinc  { background: #f5f0fa; color: #7d3c98; }
+        .badge.pdf {
+            background: #fdeaea;
+            color: #c0392b;
+        }
+
+        .badge.boinc {
+            background: #f5f0fa;
+            color: #7d3c98;
+        }
 
         .entry-date {
             font-size: 0.8rem;
@@ -113,40 +121,74 @@
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 40px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .boinc-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        .boinc-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 16px;
-            margin-top: 16px;
         }
 
-        .boinc-value {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #111;
-            letter-spacing: -0.3px;
+        .boinc-heading-left {
+            min-width: 0;
         }
 
-        .boinc-label {
-            font-size: 0.75rem;
+        .boinc-heading .entry-title {
+            margin-bottom: 3px;
+        }
+
+        .boinc-subtitle {
             color: #888;
-            margin-top: 2px;
+            font-size: 0.8rem;
+        }
+
+        .flags {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 26px;
+            font-size: 19px;
+            line-height: 1;
+            border: 1px solid #ededed;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+
+        .boinc-divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+
+        .boinc-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
         }
 
         .boinc-status {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #111;
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .dot {
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #bbb;
             flex-shrink: 0;
@@ -156,10 +198,81 @@
             background: #27ae60;
         }
 
+        .refresh-button {
+            border: 1px solid #e5e5e5;
+            background: #fff;
+            color: #555;
+            padding: 6px 11px;
+            border-radius: 7px;
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .refresh-button:hover {
+            background: #f7f7f7;
+            border-color: #ccc;
+        }
+
+        .refresh-button:disabled {
+            opacity: 0.55;
+            cursor: wait;
+        }
+
+        .boinc-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px 16px;
+            margin-top: 24px;
+        }
+
+        .boinc-stat {
+            min-width: 0;
+        }
+
+        .boinc-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #111;
+            letter-spacing: -0.4px;
+            overflow-wrap: anywhere;
+        }
+
+        .boinc-label {
+            font-size: 0.76rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
         .boinc-note {
-            font-size: 0.75rem;
-            color: #aaa;
-            margin-top: 12px;
+            color: #999;
+            font-size: 0.76rem;
+            margin-top: 20px;
+        }
+
+        .boinc-link {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .boinc-link:hover {
+            color: #0066cc;
+        }
+
+        .boinc-message {
+            padding: 22px 0 8px;
+            color: #888;
+            font-size: 0.88rem;
+        }
+
+        .boinc-message a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .boinc-message a:hover {
+            text-decoration: underline;
         }
 
         .widget-section {
@@ -196,42 +309,82 @@
             body {
                 padding: 30px 16px;
             }
+
             .entry {
                 padding: 20px;
             }
+
             .boinc-card {
                 padding: 20px;
             }
-            .widget-card {
-                padding: 16px;
+
+            .boinc-stats {
+                gap: 20px 12px;
+            }
+
+            .boinc-value {
+                font-size: 1.05rem;
+            }
+
+            .flag {
+                width: 27px;
+                height: 25px;
+                font-size: 17px;
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1>Sharing_Page</h1>
         <p class="subtitle">Adam</p>
 
-        <div class="boinc-card">
-            <div class="entry-header">
-                <div class="entry-title">Einstein@Home</div>
-                <span class="badge boinc">BOINC</span>
+        <section class="boinc-card" aria-labelledby="boinc-title">
+            <div class="boinc-heading">
+                <div class="boinc-heading-left">
+                    <div class="entry-title" id="boinc-title">Einstein@Home</div>
+                    <div class="boinc-subtitle">Distributed computing</div>
+                </div>
+                <div class="flags" aria-label="Switzerland and Czechia">
+                    <span class="flag" title="Switzerland" aria-label="Switzerland">🇨🇭</span>
+                    <span class="flag" title="Czechia" aria-label="Czechia">🇨🇿</span>
+                </div>
             </div>
-           <a href="https://www.boincstats.com" target="_blank" rel="noopener noreferrer">
-    <img src="https://www.boincstats.com/signature/5/user/282951189349/project/sig.png" alt="Benes Adam BOINC Stats">
-</a>
-        </div>
+
+            <div class="boinc-divider"></div>
+
+            <div class="boinc-status-row">
+                <div class="boinc-status">
+                    <span class="dot" id="boinc-dot"></span>
+                    <span id="boinc-status">Connecting to profile</span>
+                </div>
+                <button class="refresh-button" id="boinc-refresh" type="button">Refresh ↻</button>
+            </div>
+
+            <div class="boinc-stats" id="boinc-stats" aria-live="polite">
+                <div class="boinc-stat">
+                    <div class="boinc-value">—</div>
+                    <div class="boinc-label">Total credit</div>
+                </div>
+                <div class="boinc-stat">
+                    <div class="boinc-value">—</div>
+                    <div class="boinc-label">Recent average credit</div>
+                </div>
+            </div>
+
+            <div class="boinc-message" id="boinc-message" hidden></div>
+
+            <div class="boinc-note">
+                <a class="boinc-link" href="https://einsteinathome.org/de/userw.php?id=1065477">View Einstein@Home profile ↗</a>
+                <span id="boinc-updated"></span>
+            </div>
+        </section>
 
         <div id="entries"></div>
-        </div>
-    </div>
-
-
+    </main>
 
     <script>
-        // add entries above the marked line
         const entries = [
             {
                 title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
@@ -262,31 +415,308 @@
             }
         ];
 
-        const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
+        const badgeLabels = {
+            pdf: "PDF",
+            "3d": "3D File",
+            project: "Project"
+        };
 
-        const container = document.getElementById('entries');
+        const entriesContainer = document.getElementById("entries");
 
         if (entries.length === 0) {
-            container.innerHTML = '<div class="empty">Nothing here yet. Add an entry above!</div>';
+            entriesContainer.innerHTML = '<div class="empty">Nothing here yet. Add an entry above!</div>';
         } else {
             entries.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'entry';
-                const linksHtml = item.links
-                    .map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`)
-                    .join('');
-                div.innerHTML = `
-                    <div class="entry-header">
-                        <div class="entry-title">${item.title}</div>
-                        <span class="badge ${item.type}">${badgeLabels[item.type] || item.type}</span>
-                    </div>
-                    <div class="entry-date">${item.date}</div>
-                    <div class="entry-desc">${item.description}</div>
-                    <div class="entry-links">${linksHtml}</div>
-                `;
-                container.appendChild(div);
+                const article = document.createElement("article");
+                article.className = "entry";
+
+                const header = document.createElement("div");
+                header.className = "entry-header";
+
+                const title = document.createElement("div");
+                title.className = "entry-title";
+                title.textContent = item.title;
+
+                const badge = document.createElement("span");
+                badge.className = "badge " + item.type;
+                badge.textContent = badgeLabels[item.type] || item.type;
+
+                header.append(title, badge);
+
+                const date = document.createElement("div");
+                date.className = "entry-date";
+                date.textContent = item.date;
+
+                const description = document.createElement("div");
+                description.className = "entry-desc";
+                description.textContent = item.description;
+
+                const links = document.createElement("div");
+                links.className = "entry-links";
+
+                item.links.forEach(link => {
+                    const anchor = document.createElement("a");
+                    anchor.href = link.url;
+                    anchor.rel = "noopener noreferrer";
+                    anchor.textContent = link.label;
+                    links.appendChild(anchor);
+                });
+
+                article.append(header, date, description, links);
+                entriesContainer.appendChild(article);
             });
         }
+
+        const profileUrl = "https://einsteinathome.org/de/userw.php?id=1065477";
+        const statsContainer = document.getElementById("boinc-stats");
+        const statusText = document.getElementById("boinc-status");
+        const statusDot = document.getElementById("boinc-dot");
+        const message = document.getElementById("boinc-message");
+        const updatedText = document.getElementById("boinc-updated");
+        const refreshButton = document.getElementById("boinc-refresh");
+
+        const statDefinitions = [
+            {
+                label: "Total credit",
+                pattern: /\btotal\s+credit\b/i
+            },
+            {
+                label: "Recent average credit",
+                pattern: /\b(?:recent\s+)?average\s+credit\b|\b RAC\b/i
+            },
+            {
+                label: "World rank",
+                pattern: /\bworld\s+rank\b|\bglobal\s+rank\b/i
+            },
+            {
+                label: "Country",
+                pattern: /\bcountry\b/i
+            },
+            {
+                label: "Team",
+                pattern: /\bteam\b/i
+            },
+            {
+                label: "Computers",
+                pattern: /\bcomputers?\b/i
+            },
+            {
+                label: "Joined",
+                pattern: /\bjoined\b|\bmember\s+since\b/i
+            }
+        ];
+
+        function setStatus(text, connected) {
+            statusText.textContent = text;
+            statusDot.classList.toggle("on", connected);
+        }
+
+        function normalizeText(value) {
+            return value.replace(/\s+/g, " ").trim();
+        }
+
+        function extractRows(documentNode) {
+            const rows = [];
+
+            documentNode.querySelectorAll("tr").forEach(row => {
+                const cells = Array.from(row.querySelectorAll("th, td"))
+                    .map(cell => normalizeText(cell.textContent))
+                    .filter(Boolean);
+
+                if (cells.length >= 2) {
+                    rows.push({
+                        label: cells[0].replace(/:$/, ""),
+                        value: cells.slice(1).join(" · ")
+                    });
+                }
+            });
+
+            documentNode.querySelectorAll("dt").forEach(term => {
+                const valueNode = term.nextElementSibling;
+
+                if (valueNode && valueNode.tagName.toLowerCase() === "dd") {
+                    rows.push({
+                        label: normalizeText(term.textContent).replace(/:$/, ""),
+                        value: normalizeText(valueNode.textContent)
+                    });
+                }
+            });
+
+            documentNode.querySelectorAll("li").forEach(item => {
+                const text = normalizeText(item.textContent);
+                const match = text.match(/^([^:]{2,45}):\s*(.+)$/);
+
+                if (match) {
+                    rows.push({
+                        label: match[1].trim(),
+                        value: match[2].trim()
+                    });
+                }
+            });
+
+            return rows;
+        }
+
+        function formatValue(value) {
+            const cleaned = normalizeText(value);
+
+            if (!cleaned) {
+                return "—";
+            }
+
+            const numberMatch = cleaned.match(/^(-?\d[\d,.]*)(.*)$/);
+
+            if (numberMatch) {
+                const numberPart = numberMatch[1];
+                const suffix = numberMatch[2].trim();
+
+                if (/^\d+$/.test(numberPart)) {
+                    const formatted = Number(numberPart).toLocaleString("en-US");
+                    return suffix ? formatted + " " + suffix : formatted;
+                }
+            }
+
+            return cleaned.length > 48
+                ? cleaned.slice(0, 45) + "…"
+                : cleaned;
+        }
+
+        function renderStats(rows) {
+            const normalizedRows = rows.map(row => ({
+                label: normalizeText(row.label),
+                value: normalizeText(row.value)
+            }));
+
+            const matched = [];
+            const used = new Set();
+
+            statDefinitions.forEach(definition => {
+                const index = normalizedRows.findIndex((row, i) =>
+                    !used.has(i) &&
+                    definition.pattern.test(row.label) &&
+                    row.value &&
+                    row.value !== row.label
+                );
+
+                if (index !== -1) {
+                    used.add(index);
+                    matched.push({
+                        label: definition.label,
+                        value: normalizedRows[index].value
+                    });
+                }
+            });
+
+            const displayStats = matched.filter(stat =>
+                stat.label !== "Recent average credit" ||
+                !matched.some(other =>
+                    other !== stat &&
+                    other.label === "Total credit" &&
+                    other.value === stat.value
+                )
+            );
+
+            if (displayStats.length === 0) {
+                return false;
+            }
+
+            statsContainer.replaceChildren();
+
+            displayStats.forEach(stat => {
+                const item = document.createElement("div");
+                item.className = "boinc-stat";
+
+                const value = document.createElement("div");
+                value.className = "boinc-value";
+                value.textContent = formatValue(stat.value);
+                value.title = stat.value;
+
+                const label = document.createElement("div");
+                label.className = "boinc-label";
+                label.textContent = stat.label;
+
+                item.append(value, label);
+                statsContainer.appendChild(item);
+            });
+
+            return true;
+        }
+
+        async function loadBoincStats() {
+            refreshButton.disabled = true;
+            message.hidden = true;
+            message.replaceChildren();
+            setStatus("Loading statistics", false);
+
+            const proxyUrl =
+                "https://api.allorigins.win/raw?url=" +
+                encodeURIComponent(profileUrl);
+
+            try {
+                const response = await fetch(proxyUrl, {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "text/html"
+                    },
+                    signal: AbortSignal.timeout(15000)
+                });
+
+                if (!response.ok) {
+                    throw new Error("The data service returned HTTP " + response.status);
+                }
+
+                const html = await response.text();
+
+                if (!html || html.length < 100) {
+                    throw new Error("The profile returned an empty response");
+                }
+
+                const parsedDocument = new DOMParser().parseFromString(html, "text/html");
+                const pageText = normalizeText(parsedDocument.body.textContent);
+
+                if (
+                    !pageText ||
+                    /cloudflare|access denied|captcha|temporarily blocked/i.test(pageText.slice(0, 500))
+                ) {
+                    throw new Error("The profile could not be read");
+                }
+
+                const rows = extractRows(parsedDocument);
+
+                if (!renderStats(rows)) {
+                    throw new Error("No recognizable statistics were found on the profile");
+                }
+
+                setStatus("Profile loaded", true);
+                updatedText.textContent = " · Updated " +
+                    new Date().toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+            } catch (error) {
+                setStatus("Statistics unavailable", false);
+
+                message.replaceChildren();
+
+                const text = document.createElement("span");
+                text.textContent =
+                    "Live statistics could not be retrieved. The data proxy may be unavailable, or the profile layout may have changed. ";
+
+                const link = document.createElement("a");
+                link.href = profileUrl;
+                link.textContent = "Open profile ↗";
+
+                message.append(text, link);
+                message.hidden = false;
+            } finally {
+                refreshButton.disabled = false;
+            }
+        }
+
+        refreshButton.addEventListener("click", loadBoincStats);
+
+        loadBoincStats();
     </script>
 </body>
 </html>
