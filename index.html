@@ -1,398 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharing_Page</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fafafa;
-            color: #222;
-            line-height: 1.6;
-            padding: 60px 20px;
-        }
-
-        .container {
-            max-width: 680px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 40px;
-        }
-
-        .entry {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .entry:hover {
-            border-color: #ccc;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .entry-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 4px;
-        }
-
-        .entry-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #111;
-        }
-
-        .badge {
-            flex-shrink: 0;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .badge.pdf    { background: #fdeaea; color: #c0392b; }
-        .badge.3d     { background: #eaf3fd; color: #2471a3; }
-        .badge.project{ background: #eafaf1; color: #1e8449; }
-        .badge.boinc  { background: #f5f0fa; color: #7d3c98; }
-
-        .entry-date {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 12px;
-        }
-
-        .entry-desc {
-            font-size: 0.95rem;
-            color: #444;
-            margin-bottom: 16px;
-        }
-
-        .entry-links a {
-            display: inline-block;
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-right: 16px;
-        }
-
-        .entry-links a:hover {
-            text-decoration: underline;
-        }
-
-        .boinc-card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 40px;
-        }
-
-        .boinc-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .boinc-value {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #111;
-            letter-spacing: -0.3px;
-        }
-
-        .boinc-label {
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        .boinc-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #111;
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #bbb;
-            flex-shrink: 0;
-        }
-
-        .dot.on {
-            background: #27ae60;
-        }
-
-        .boinc-note {
-            font-size: 0.75rem;
-            color: #aaa;
-            margin-top: 12px;
-        }
-
-        .widget-section {
-            margin-top: 48px;
-        }
-
-        .widget-section h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-
-        .widget-section p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-        }
-
-        .widget-card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .empty {
-            text-align: center;
-            color: #999;
-            padding: 60px 20px;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 30px 16px;
-            }
-            .entry {
-                padding: 20px;
-            }
-            .boinc-card {
-                padding: 20px;
-            }
-            .widget-card {
-                padding: 16px;
-            }
-        }
-    </style>
-<base target="_blank">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharing Page</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafafa; color: #222; line-height: 1.6; padding: 60px 20px; } .container { max-width: 680px; margin: 0 auto; } h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.5px; } .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 40px; } .entry { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; margin-bottom: 16px; transition: border-color 0.2s, box-shadow 0.2s; } .entry:hover { border-color: #ccc; box-shadow: 0 2px 8px rgba(0,0,0,0.04); } .entry-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; } .entry-title { font-size: 1.1rem; font-weight: 600; color: #111; } .badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 999px; background: #f0f0f0; color: #666; } .badge.pdf { background: #fdeaea; color: #c0392b; } .badge.3d { background: #eaf3fd; color: #2471a3; } .badge.project{ background: #eafaf1; color: #1e8449; } .badge.boinc { background: #f5f0fa; color: #7d3c98; } .entry-date { font-size: 0.8rem; color: #888; margin-bottom: 12px; } .entry-desc { font-size: 0.95rem; color: #444; margin-bottom: 16px; } .entry-links a { display: inline-block; color: #0066cc; text-decoration: none; font-size: 0.9rem; font-weight: 500; margin-right: 16px; } .entry-links a:hover { text-decoration: underline; } .boinc-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; margin-bottom: 40px; } .boinc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-top: 16px; } .boinc-value { font-size: 1.15rem; font-weight: 600; color: #111; letter-spacing: -0.3px; } .boinc-label { font-size: 0.75rem; color: #888; margin-top: 2px; } .boinc-status { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 600; color: #111; } .dot { width: 9px; height: 9px; border-radius: 50%; background: #bbb; flex-shrink: 0; } .dot.on { background: #27ae60; } .boinc-note { font-size: 0.75rem; color: #aaa; margin-top: 12px; } .widget-section { margin-top: 48px; } .widget-section h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.3px; } .widget-section p { color: #666; font-size: 0.9rem; margin-bottom: 16px; } .widget-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 24px; } .empty { text-align: center; color: #999; padding: 60px 20px; } @media (max-width: 480px) { body { padding: 30px 16px; } .entry { padding: 20px; } .boinc-card { padding: 20px; } .widget-card { padding: 16px; } } 
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sharing_Page</h1>
-        <p class="subtitle">Adam</p>
-
-        <div class="boinc-card">
-            <div class="entry-header">
-                <div class="entry-title">Einstein@Home</div>
-                <span class="badge boinc">BOINC</span>
-            </div>
-            <div class="boinc-stats">
-                <div>
-                    <div class="boinc-value" id="boinc-flops">&mdash;</div>
-                    <div class="boinc-label">FLOPs (quintillion)</div>
-                </div>
-                <div>
-                    <div class="boinc-value" id="boinc-credit">&mdash;</div>
-                    <div class="boinc-label">Cobblestones</div>
-                </div>
-                <div>
-                    <div class="boinc-value" id="boinc-rac">&mdash;</div>
-                    <div class="boinc-label">Recent Avg Credit</div>
-                </div>
-                <div>
-                    <div class="boinc-status">
-                        <span class="dot" id="boinc-dot"></span>
-                        <span id="boinc-status-text">&hellip;</span>
-                    </div>
-                    <div class="boinc-label">BOINC status</div>
-                </div>
-            </div>
-            <div class="entry-links" style="margin-top: 16px;">
-                <a href="https://einsteinathome.org/de/account/336577" target="_blank" rel="noopener">View my profile &rarr;</a>
-            </div>
-            <div class="boinc-note" id="boinc-note"></div>
+<div class="container">
+<h1>Sharing_Page</h1>
+<div class="subtitle">Adam</div>
+    <div class="boinc-card">
+        <div class="entry-header">
+            <div class="entry-title">Einstein@Home</div>
+            <span class="badge boinc">BOINC</span>
         </div>
-
-        <div id="entries"></div>
-
-        <div class="widget-section">
-            <h2>My Playlist</h2>
-            <div class="widget-card">
-                <div id="JFWebsiteWidget-01a08f8339a870008f8ae0d84511f3fa9346"></div>
-                <script src="https://www.jotform.com/website-widgets/embed/01a08f8339a870008f8ae0d84511f3fa9346"></script>
+        <div class="boinc-stats">
+            <div>
+                <div class="boinc-value" id="boinc-flops">&mdash;</div>
+                <div class="boinc-label">FLOPs (quintillion)</div>
             </div>
+            <div>
+                <div class="boinc-value" id="boinc-credit">&mdash;</div>
+                <div class="boinc-label">Cobblestones</div>
+            </div>
+            <div>
+                <div class="boinc-value" id="boinc-rac">&mdash;</div>
+                <div class="boinc-label">Recent Avg Credit</div>
+            </div>
+            <div>
+                <div class="boinc-status">
+                    <span class="dot" id="boinc-dot"></span>
+                    <span id="boinc-status-text">&hellip;</span>
+                </div>
+                <div class="boinc-label">BOINC status</div>
+            </div>
+        </div>
+        <div class="entry-links" style="margin-top: 16px;">
+            <a href="https://einsteinathome.org/de/account/336577" target="_blank" rel="noopener">View my profile &rarr;</a>
+        </div>
+        <div class="boinc-note" id="boinc-note"></div>
+    </div>
+    <div id="entries"></div>
+    <div class="widget-section">
+        <h2>My Playlist</h2>
+        <div class="widget-card">
+            <div id="JFWebsiteWidget-01a08f8339a870008f8ae0d84511f3fa9346"></div>
+            <script src="https://www.jotform.com/website-widgets/embed/01a08f8339a870008f8ae0d84511f3fa9346"></script>
         </div>
     </div>
+</div>
+<script>
+    const boincCfg = {
+        boincId: 1065477,
+        flopsPerCredit: 4.32e11,
+        refreshMs: 15 * 60 * 1000
+    };
 
-    <script>
-        const boincCfg = {
-            boincId: 1065477,
-            flopsPerCredit: 4.32e11,
-            refreshMs: 15 * 60 * 1000
-        };
-
-        function findNumber(source, names) {
-            for (const name of names) {
-                const patterns = [
-                    new RegExp('(?:<[^>]+\\bid=["\\']' + name + '["\\'][^>]*>\\s*)([\\d,.]+)', 'i'),
-                    new RegExp('["\\']?' + name + '["\\']?\\s*[:=]\\s*["\\']?([\\d,.]+)', 'i'),
-                    new RegExp('\\b' + name + '\\b\\s*[:>]\\s*([\\d,.]+)', 'i')
-                ];
-                for (const pattern of patterns) {
-                    const match = source.match(pattern);
-                    if (match) {
-                        const value = Number(match[1].replace(/,/g, ''));
-                        if (Number.isFinite(value)) return value;
-                    }
-                }
-            }
-            return null;
-        }
-
-        function renderBoinc(credit, rac, sourceName) {
-            const flops = credit * boincCfg.flopsPerCredit / 1e18;
-            document.getElementById('boinc-flops').textContent = flops.toFixed(flops < 0.01 ? 4 : 2);
-            document.getElementById('boinc-credit').textContent = Math.round(credit).toLocaleString('en-US');
-            document.getElementById('boinc-rac').textContent = Math.round(rac).toLocaleString('en-US');
-
-            const dot = document.getElementById('boinc-dot');
-            const status = document.getElementById('boinc-status-text');
-            dot.classList.toggle('on', rac > 0);
-            status.textContent = rac > 0 ? 'active credit' : 'no recent credit';
-            document.getElementById('boinc-note').textContent =
-                'Updated ' + new Date().toLocaleTimeString() + ' · Source: ' + sourceName;
-        }
-
-        async function fetchText(url) {
-            const response = await fetch(url, { cache: 'no-store' });
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            return await response.text();
-        }
-
-        async function loadBoinc() {
-            const profileUrl = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
-            const sources = [
-                { name: 'Einstein@Home', url: profileUrl },
-                { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(profileUrl) },
-                { name: 'CodeTabs', url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(profileUrl) }
+    function readCredit(source, names) {
+        for (const name of names) {
+            const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const patterns = [
+                new RegExp('<' + escaped + '>[\\s\\S]*?([\\d,]+(?:\\.\\d+)?)\\s*</' + escaped + '>', 'i'),
+                new RegExp('\\b' + escaped + '\\b\\s*[:=]\\s*["\\']?([\\d,]+(?:\\.\\d+)?)', 'i')
             ];
-
-            document.getElementById('boinc-status-text').textContent = 'updating…';
-            for (const source of sources) {
-                try {
-                    const body = await fetchText(source.url);
-                    const credit = findNumber(body, ['total_credit', 'totalCredit']);
-                    const rac = findNumber(body, ['expavg_credit', 'recent_average_credit', 'expAvgCredit']);
-                    if (credit !== null && rac !== null) {
-                        renderBoinc(credit, rac, source.name);
-                        return;
-                    }
-                } catch (error) {
+            for (const pattern of patterns) {
+                const match = source.match(pattern);
+                if (match) {
+                    const value = Number(match[1].replace(/,/g, ''));
+                    if (Number.isFinite(value)) return value;
                 }
             }
-
-            document.getElementById('boinc-status-text').textContent = 'unavailable';
-            document.getElementById('boinc-note').textContent =
-                'Could not retrieve live stats. The data source or browser may be blocking the request.';
         }
-
-        loadBoinc();
-        setInterval(loadBoinc, boincCfg.refreshMs);
-    </script>
-
-    <script>
-        // add entries above the marked line
-        const entries = [
-            {
-                title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
-                date: "21.08.2026",
-                type: "pdf",
-                description: "Talking about neutron stars",
-                links: [
-                    { label: "Open PDF →", url: "./Neutron Stars; When gravity outweighs atomic Physic.pdf" }
-                ]
-            },
-            {
-                title: "Gravity; Why It's Not a Force",
-                date: "17.06.2026",
-                type: "pdf",
-                description: "Proving that gravity is not a force",
-                links: [
-                    { label: "Open PDF →", url: "./Gravity; Why Its Not a Force.pdf" }
-                ]
-            },
-            {
-                title: "Black Holes; We Don't Know Is Not an Equation",
-                date: "16.06.2026",
-                type: "pdf",
-                description: "Counter argument in the black hole debate",
-                links: [
-                    { label: "Open PDF →", url: "./Black Holes; We dont Know is not an equation.pdf" }
-                ]
+        const doc = new DOMParser().parseFromString(source, 'text/html');
+        const text = doc.body ? doc.body.innerText : source;
+        const labels = {
+            total_credit: /total\s+credit\s*:?\s*([\d,]+(?:\.\d+)?)/i,
+            expavg_credit: /(?:recent\s+average\s+credit|average\s+credit|recent\s+credit)\s*:?\s*([\d,]+(?:\.\d+)?)/i
+        };
+        for (const name of names) {
+            if (labels[name]) {
+                const match = text.match(labels[name]);
+                if (match) {
+                    const value = Number(match[1].replace(/,/g, ''));
+                    if (Number.isFinite(value)) return value;
+                }
             }
-        ];
-
-        const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
-
-        const container = document.getElementById('entries');
-
-        if (entries.length === 0) {
-            container.innerHTML = '<div class="empty">Nothing here yet. Add an entry above!</div>';
-        } else {
-            entries.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'entry';
-                const linksHtml = item.links
-                    .map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`)
-                    .join('');
-                div.innerHTML = `
-                    <div class="entry-header">
-                        <div class="entry-title">${item.title}</div>
-                        <span class="badge ${item.type}">${badgeLabels[item.type] || item.type}</span>
-                    </div>
-                    <div class="entry-date">${item.date}</div>
-                    <div class="entry-desc">${item.description}</div>
-                    <div class="entry-links">${linksHtml}</div>
-                `;
-                container.appendChild(div);
-            });
         }
-    </script>
-</body>
-</html>
-    </script>
+        return null;
+    }
+
+    function renderBoinc(credit, rac, sourceName) {
+        const flops = credit * boincCfg.flopsPerCredit / 1e18;
+        document.getElementById('boinc-flops').textContent = flops.toFixed(flops < 0.01 ? 4 : 2);
+        document.getElementById('boinc-credit').textContent = Math.round(credit).toLocaleString('en-US');
+        document.getElementById('boinc-rac').textContent = Math.round(rac).toLocaleString('en-US');
+        document.getElementById('boinc-dot').classList.toggle('on', rac > 0);
+        document.getElementById('boinc-status-text').textContent = rac > 0 ? 'active credit' : 'no recent credit';
+        document.getElementById('boinc-note').textContent = 'Updated ' + new Date().toLocaleTimeString() + ' · Source: ' + sourceName;
+    }
+
+    async function fetchText(url) {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return await response.text();
+    }
+
+    async function loadBoinc() {
+        const profileUrl = 'https://einsteinathome.org/userw.php?id=' + boincCfg.boincId;
+        const sources = [
+            { name: 'Einstein@Home', url: profileUrl },
+            { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent(profileUrl) },
+            { name: 'CodeTabs', url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(profileUrl) }
+        ];
+        document.getElementById('boinc-status-text').textContent = 'updating…';
+        for (const source of sources) {
+            try {
+                const body = await fetchText(source.url);
+                const credit = readCredit(body, ['total_credit', 'totalCredit']);
+                const rac = readCredit(body, ['expavg_credit', 'recent_average_credit', 'expAvgCredit']);
+                if (credit !== null && rac !== null) {
+                    renderBoinc(credit, rac, source.name);
+                    return;
+                }
+            } catch (error) {
+            }
+        }
+        document.getElementById('boinc-status-text').textContent = 'unavailable';
+        document.getElementById('boinc-note').textContent = 'Could not retrieve live stats. The data source or browser may be blocking the request.';
+    }
+
+    loadBoinc();
+    setInterval(loadBoinc, boincCfg.refreshMs);
+</script>
+<script>
+    const entries = [
+        {
+            title: "Neutron Stars; When Gravity Outweighs Atomic Physics",
+            date: "21.08.2026",
+            type: "pdf",
+            description: "Talking about neutron stars",
+            links: [
+                { label: "Open PDF →", url: "./Neutron Stars; When gravity outweighs atomic Physic.pdf" }
+            ]
+        },
+        {
+            title: "Gravity; Why It's Not a Force",
+            date: "17.06.2026",
+            type: "pdf",
+            description: "Proving that gravity is not a force",
+            links: [
+                { label: "Open PDF →", url: "./Gravity; Why Its Not a Force.pdf" }
+            ]
+        },
+        {
+            title: "Black Holes; We Don't Know Is Not an Equation",
+            date: "16.06.2026",
+            type: "pdf",
+            description: "Counter argument in the black hole debate",
+            links: [
+                { label: "Open PDF →", url: "./Black Holes; We dont Know is not an equation.pdf" }
+            ]
+        }
+    ];
+    const badgeLabels = { pdf: "PDF", "3d": "3D File", project: "Project" };
+    const container = document.getElementById('entries');
+    if (entries.length === 0) {
+        container.innerHTML = '<div class="empty">Nothing here yet. Add an entry above!</div>';
+    } else {
+        entries.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'entry';
+            const linksHtml = item.links
+                .map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`)
+                .join('');
+             div.innerHTML = ` 
+                <div class="entry-header">
+                    <div class="entry-title">${item.title}</div>
+                    <span class="badge ${item.type}">${badgeLabels[item.type] || item.type}</span>
+                </div>
+                <div class="entry-date">${item.date}</div>
+                <div class="entry-desc">${item.description}</div>
+                <div class="entry-links">${linksHtml}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+</script>
 </body>
 </html>
