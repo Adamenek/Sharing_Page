@@ -1,39 +1,68 @@
+
 import json
-import os
-import random
-from datetime import timedelta
-from datetime import date
 from pathlib import Path
 
 import requests
 
-API_KEY = os.environ["NASA_API_KEY"]
-START = date(1995, 6, 16)
-TODAY = date.today()
-random_day = START + timedelta(days=random.randint(0, (TODAY - START).days))
-URL = "https://api.nasa.gov/planetary/apod"
+API_URL = "https://science.nasa.gov/wp-json/wp/v2/apod-basic/"
+OUTPUT_FILE = Path(__file__).with_name("nasa-today.json")
 
-response = requests.get(
-    URL,
-    params={"api_key": API_KEY, "date": random_day.isoformat()},
-    timeout=30,
-)
-response.raise_for_status()
-entry = response.json()
-if not isinstance(entry, dict) or not entry.get("url"):
-    raise RuntimeError("NASA APOD did not return a usable entry.")
-data = {
-    "title": entry.get("title", ""),
-    "date": entry.get("date", TODAY),
-    "explanation": entry.get("explanation", ""),
-    "url": entry.get("url", ""),
-    "hdurl": entry.get("hdurl", ""),
-    "media_type": entry.get("media_type", "image"),
-    "copyright": entry.get("copyright", ""),
-}
-Path("nasa-today.json").write_text(
-    json.dumps(data, ensure_ascii=False, indent=2) + "\n",
-    encoding="utf-8",
-)
-print(f"Saved NASA APOD entry: {data['title']} ({data['date']})")
+
+def main():
+    response = requests.get(
+        API_URL,
+        params={"count": 1},
+        timeout=30,
+    )
+    response.raise_for_status()
+    result = response.json()
+
+    if isinstance(result, list):
+        entries = result
+    else:
+        entries = [result]
+
+    for entry in entries:
+        title = entry.get("title", "").strip()
+        date = entry.get("date", "")
+        explanation = entry.get("explanation", "").strip()
+        media_type = entry.get("media_type", "")
+        image_url = entry.get("hdurl") or entry.get("url", "")
+
+        if (
+            title
+            and title.lower() != "nasa science"
+            and date
+            and explanation
+            and media_type == "image"
+            and image_url
+            and "nasa-logo" not in image_url.lower()
+        ):
+            cleaned_entry = {
+                "title": title,
+                "date": date,
+                "year": date[:4],
+                "explanation": explanation,
+                "url": image_url,
+                "media_type": media_type,
+                "copyright": entry.get("copyright", ""),
+                "credit": entry.get("credit", ""),
+            }
+
+            OUTPUT_FILE.write_text(
+                json.dumps(cleaned_entry, indent=2),
+                encoding="utf-8",
+            )
+            print(f"Saved: {title} ({date})")
+            return
+
+    raise RuntimeError(
+        "NASA did not return a valid astronomy picture. "
+        "The existing picture file was left unchanged."
+    )
+
+
+if __name__ == "__main__":
+    main()
+
 
