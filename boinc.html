@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fafafa">
+<meta name="description" content="Live local BOINC task status and Einstein@Home credit history.">
+<title>BOINC Dashboard | Sharing_Page</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#222;background:#fafafa}
+body{background:#fafafa;color:#222;line-height:1.6;padding:48px 20px}
+a{color:#0666c2;text-decoration:none}a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid #0666c2;outline-offset:3px;border-radius:3px}
+.container{max-width:760px;margin:0 auto}
+h1{font-size:1.8rem;font-weight:600;letter-spacing:-.5px;margin-bottom:6px}
+.subtitle{color:#666;font-size:.95rem;margin-bottom:28px}
+.panel,.task{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:22px;margin-bottom:16px}
+h2{font-size:1.12rem;font-weight:650;color:#111;margin-bottom:16px}
+.eyebrow{color:#888;font-size:.68rem;font-weight:650;letter-spacing:1.1px;text-transform:uppercase;margin-bottom:3px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;color:#555}
+.dot{width:9px;height:9px;border-radius:50%;background:#aaa;display:inline-block}
+.dot.on{background:#239b56}.dot.off{background:#c65b4b}.dot.unknown{background:#c49a31}
+.small{font-size:.78rem;color:#888}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{padding:13px;border:1px solid #ededed;border-radius:9px;background:#fdfdfd;min-width:0}
+.metric-label{font-size:.76rem;color:#888;margin-bottom:5px}
+.metric-value{font-size:1.05rem;font-weight:650;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.task{padding:18px 20px}
+.task h3{font-size:1rem;font-weight:650;overflow-wrap:anywhere;margin:5px 0 8px}
+.task-meta{font-size:.8rem;color:#777;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+progress{width:100%;height:12px;margin:12px 0 7px;accent-color:#2878bd}
+.task-empty{color:#777;font-size:.9rem}
+.chart-wrap{width:100%;overflow:hidden}
+canvas{display:block;width:100%;height:220px}
+.notice{font-size:.8rem;color:#777;margin-top:12px;line-height:1.5}
+.footer{margin-top:24px;font-size:.8rem;color:#888;display:flex;gap:16px;flex-wrap:wrap}
+@media(max-width:520px){body{padding:28px 14px}.panel{padding:18px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:10px}.metric-value{font-size:.95rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="container">
+  <header>
+    <p class="eyebrow">Personal volunteer computing</p>
+    <h1>Einstein@Home BOINC Dashboard</h1>
+    <p class="subtitle">Local task status, hardware sensors when available, and accumulated contribution.</p>
+    <p><a href="./index.html">← Back to Sharing_Page</a></p>
+  </header>
+
+  <section class="panel" aria-live="polite">
+    <div class="row" style="margin-bottom:16px">
+      <div><p class="eyebrow">Computer</p><h2 style="margin-bottom:0">BOINC client status</h2></div>
+      <span class="status"><span class="dot unknown" id="status-dot"></span><span id="status-text">Waiting for status…</span></span>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Active tasks</div><div class="metric-value" id="active-count">—</div></div>
+      <div class="metric"><div class="metric-label">CPU temperature</div><div class="metric-value" id="cpu-temp">Unavailable</div></div>
+      <div class="metric"><div class="metric-label">GPU temperature</div><div class="metric-value" id="gpu-temp">Unavailable</div></div>
+      <div class="metric"><div class="metric-label">Last computer update</div><div class="metric-value" id="updated-at">—</div></div>
+    </div>
+    <p class="notice" id="status-note">This page updates from a status file published by your Windows computer. Temperatures require compatible sensor software.</p>
+  </section>
+
+  <section aria-labelledby="tasks-title">
+    <h2 id="tasks-title">Current tasks</h2>
+    <div id="tasks"><article class="task"><p class="task-empty">Waiting for task information…</p></article></div>
+  </section>
+
+  <section class="panel">
+    <h2>Einstein@Home credit history</h2>
+    <div class="metrics" style="margin-bottom:14px">
+      <div class="metric"><div class="metric-label">Total credit</div><div class="metric-value" id="total-credit">—</div></div>
+      <div class="metric"><div class="metric-label">Recent average credit</div><div class="metric-value" id="recent-credit">—</div></div>
+    </div>
+    <div class="chart-wrap"><canvas id="credit-chart" width="700" height="220" role="img" aria-label="Graph of Einstein@Home total credit history"></canvas></div>
+    <p class="notice" id="history-note">The graph appears once dated history snapshots are available. Credit data is separate from the live task feed.</p>
+  </section>
+
+  <footer class="footer">
+    <a href="https://einsteinathome.org/de/userw.php?id=1065477" rel="noopener noreferrer">Einstein@Home profile ↗</a>
+    <a href="https://www.boincstats.com" rel="noopener noreferrer">BOINCstats ↗</a>
+  </footer>
+</main>
+<script>
+"use strict";
+const LIVE_URL = "./boinc-live.json";
+const STATS_URL = "./einstein-stats.json";
+const HISTORY_URL = "./einstein-history.json";
+const $ = id => document.getElementById(id);
+const number = value => Number.isFinite(Number(value)) ? new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(value)) : "—";
+const duration = seconds => {
+  if (!Number.isFinite(Number(seconds)) || Number(seconds) < 0) return "—";
+  let s = Math.round(Number(seconds));
+  const d = Math.floor(s/86400); s%=86400;
+  const h = Math.floor(s/3600); s%=3600;
+  const m = Math.floor(s/60);
+  if (d) return `${d}d ${h}h`;
+  if (h) return `${h}h ${m}m`;
+  return `${m}m`;
+};
+function setStatus(text, state) {
+  $("status-text").textContent = text;
+  $("status-dot").className = "dot " + state;
+}
+function renderTasks(data) {
+  const root = $("tasks");
+  root.replaceChildren();
+  const tasks = Array.isArray(data.tasks) ? data.tasks.slice(0, 2) : [];
+  $("active-count").textContent = String(Number(data.active_task_count ?? tasks.length));
+  if (!tasks.length) {
+    const article = document.createElement("article");
+    article.className = "task";
+    const p = document.createElement("p");
+    p.className = "task-empty";
+    p.textContent = data.boinc_running === false ? "BOINC is not running, or no tasks are active." : "No active tasks were reported.";
+    article.appendChild(p); root.appendChild(article); return;
+  }
+  for (const task of tasks) {
+    const article = document.createElement("article"); article.className = "task";
+    const label = document.createElement("p"); label.className = "eyebrow"; label.textContent = task.project || "BOINC task";
+    const title = document.createElement("h3"); title.textContent = task.name || "Unnamed task";
+    const meta = document.createElement("div"); meta.className = "task-meta";
+    const percent = Math.max(0,Math.min(100,Number(task.progress_percent)||0));
+    const left = document.createElement("span"); left.textContent = `${percent.toFixed(1)}% complete`;
+    const right = document.createElement("span"); right.textContent = `Est. remaining: ${duration(task.estimated_seconds_remaining)}`;
+    const bar = document.createElement("progress"); bar.max=100; bar.value=percent; bar.setAttribute("aria-label",`${title.textContent}: ${percent.toFixed(1)} percent complete`);
+    meta.append(left,right); article.append(label,title,bar,meta); root.appendChild(article);
+  }
+}
+async function fetchJson(url) {
+  const response = await fetch(url + "?t=" + Date.now(), {cache:"no-store"});
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  return response.json();
+}
+async function loadLive() {
+  try {
+    const data = await fetchJson(LIVE_URL);
+    const updated = data.updated_at ? new Date(data.updated_at) : null;
+    const age = updated && Number.isFinite(updated.getTime()) ? (Date.now()-updated.getTime())/1000 : Infinity;
+    if (age > 180) setStatus("Status feed is stale", "unknown");
+    else setStatus(data.boinc_running ? "BOINC running" : "BOINC not detected", data.boinc_running ? "on" : "off");
+    $("cpu-temp").textContent = data.temperatures?.cpu_c == null ? "Unavailable" : `${number(data.temperatures.cpu_c)} °C`;
+    $("gpu-temp").textContent = data.temperatures?.gpu_c == null ? "Unavailable" : `${number(data.temperatures.gpu_c)} °C`;
+    $("updated-at").textContent = updated && Number.isFinite(updated.getTime()) ? updated.toLocaleString() : "Unknown";
+    $("status-note").textContent = "Status feed is public. Avoid including usernames, file paths, IP addresses, or other private system details.";
+    renderTasks(data);
+  } catch (e) {
+    setStatus("Status feed unavailable", "unknown");
+    $("status-note").textContent = "No live status file found yet. Follow the setup instructions to publish boinc-live.json.";
+    $("tasks").replaceChildren();
+    const p=document.createElement("p");p.className="task-empty";p.textContent="No task data available."; $("tasks").appendChild(p);
+    console.warn(e);
+  }
+}
+function drawChart(points) {
+  const canvas=$("credit-chart"), ctx=canvas.getContext("2d");
+  const w=canvas.width,h=canvas.height,pad={l:58,r:14,t:16,b:30};
+  ctx.clearRect(0,0,w,h); ctx.font="12px Segoe UI, sans-serif"; ctx.fillStyle="#777"; ctx.strokeStyle="#e8e8e8"; ctx.lineWidth=1;
+  if (!Array.isArray(points)||points.length<2) {
+    ctx.fillText("Add dated snapshots to einstein-history.json to show a trend.",pad.l, h/2);
+    return;
+  }
+  const vals=points.map(p=>Number(p.total_credit)).filter(Number.isFinite);
+  if(vals.length<2)return;
+  const min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+  for(let i=0;i<5;i++){const y=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText(number(max-range*i/4),2,y+4);}
+  ctx.strokeStyle="#2878bd";ctx.lineWidth=2.5;ctx.beginPath();
+  points.forEach((p,i)=>{const x=pad.l+(w-pad.l-pad.r)*i/(points.length-1);const y=pad.t+(h-pad.t-pad.b)*(1-(Number(p.total_credit)-min)/range);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
+  ctx.stroke();
+  ctx.fillStyle="#777";ctx.fillText(String(points[0].date||""),pad.l,h-8);
+  const last=String(points[points.length-1].date||"");ctx.fillText(last,w-pad.r-ctx.measureText(last).width,h-8);
+}
+async function loadCredits() {
+  try {
+    const stats=await fetchJson(STATS_URL);
+    $("total-credit").textContent=number(stats.total_credit);
+    $("recent-credit").textContent=number(stats.expavg_credit);
+  } catch(e) { console.warn("Credit stats unavailable",e); }
+  try {
+    const history=await fetchJson(HISTORY_URL);
+    drawChart(history.points || history);
+    $("history-note").textContent="Credit history is based on saved snapshots; the chart will become more useful as more dates accumulate.";
+  } catch(e) {
+    drawChart([]);
+    $("history-note").textContent="History file not found yet. You can add einstein-history.json later; current credit figures still load from einstein-stats.json.";
+  }
+}
+loadLive(); loadCredits();
+setInterval(loadLive,30000);
+setInterval(loadCredits,300000);
+</script>
+</body>
+</html>
